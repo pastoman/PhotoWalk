@@ -3,8 +3,10 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/login_fragment.xml" value="0.25" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/activity_maps.xml" value="0.358695652173913" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/custom_info_contents.xml" value="0.36666666666666664" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/login_fragment.xml" value="0.18802083333333333" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/menu/current_place_menu.xml" value="0.10555555555555556" />
       </map>
     </option>

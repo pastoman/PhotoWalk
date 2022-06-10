@@ -3,22 +3,21 @@ package sk.fri.uniza.photowalk
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -30,7 +29,11 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
+import com.maps.route.extensions.drawRouteOnMap
+import com.maps.route.extensions.moveCameraOnMap
+import com.maps.route.model.TravelMode
 import sk.fri.uniza.photowalk.databinding.ActivityMapsBinding
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -66,6 +69,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    override fun onBackPressed() {
+        moveTaskToBack(true)
+        android.os.Process.killProcess(android.os.Process.myPid())
+        System.exit(0)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -217,6 +226,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
+
+        if (lastKnownLocation != null) {
+            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                LatLng(lastKnownLocation!!.latitude,
+                    lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
+            val source = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude) //starting point (LatLng)
+            val destination = defaultLocation // ending point (LatLng)
+
+            mMap?.run {
+                moveCameraOnMap(latLng = source) // if you want to zoom the map to any point
+
+                //Called the drawRouteOnMap extension to draw the polyline/route on google maps
+                drawRouteOnMap(
+                    getString(R.string.maps_api_key), //your API key
+                    source = source, // Source from where you want to draw path
+                    destination = destination, // destination to where you want to draw path
+                    context = applicationContext!! //Activity context
+                )
+            }
+        }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -256,6 +286,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                 LatLng(lastKnownLocation!!.latitude,
                                     lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
+
+                            val source = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude) //starting point (LatLng)
+                            val destination = LatLng(49.211311, 18.814463)// ending point (LatLng)
+
+                            mMap?.run {
+                                moveCameraOnMap(latLng = source) // if you want to zoom the map to any point
+
+                                //Called the drawRouteOnMap extension to draw the polyline/route on google maps
+                                drawRouteOnMap(
+                                    getString(R.string.maps_api_key), //your API key
+                                    source = source, // Source from where you want to draw path
+                                    destination = destination, // destination to where you want to draw path
+                                    context = applicationContext!!, //Activity context
+                                    travelMode = TravelMode.DRIVING
+                                )
+                            }
                         }
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.")
