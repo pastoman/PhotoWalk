@@ -7,14 +7,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import kotlinx.coroutines.launch
+import sk.fri.uniza.photowalk.Database.Account
+import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.databinding.LoginFragmentBinding
 import sk.fri.uniza.photowalk.databinding.RegisterFragmentBinding
 
 
 class RegisterFragment : Fragment() {
     private lateinit var binding: RegisterFragmentBinding
-
+    private lateinit var database: AppDatabase
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,9 +31,18 @@ class RegisterFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        database = AppDatabase.getDatabase(requireActivity().application)
         binding.RegisterButton.setOnClickListener {
-            val myIntent = Intent(it.context, MapsActivity::class.java)
-            startActivity(myIntent)
+            viewLifecycleOwner.lifecycleScope.launch {
+                database.accountDao().addAccount(Account(
+                    1,
+                    binding.emailRegisterBox.text.toString(),
+                    binding.usernameRegisterBox.text.toString(),
+                    binding.passwordRegisterBox.text.toString()
+                ))
+            }
+            it.findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
         }
 
         binding.LoginButton.setOnClickListener {

@@ -1,12 +1,21 @@
 package sk.fri.uniza.photowalk.Database
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.PrimaryKey
+import androidx.room.*
+import androidx.room.ForeignKey.CASCADE
 
-@Entity
-data class User(
-    @PrimaryKey val uid: Int,
-    @ColumnInfo(name = "first_name") val firstName: String?,
-    @ColumnInfo(name = "last_name") val lastName: String?
+@Entity(tableName = "account" ,indices = [Index(value = ["email", "username"], unique = true)])
+data class Account(
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id: Int,
+    @ColumnInfo(name = "email") val email: String,
+    @ColumnInfo(name = "username") val username: String,
+    @ColumnInfo(name = "password") val password: String
+)
+
+@Entity(tableName = "user_data")
+data class UserData(
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id : Int,
+    @ColumnInfo(name = "name") val name: String?,
+    @ColumnInfo(name = "surname") val surname: String?,
+    @ColumnInfo(name = "country") val country: String?,
+    @ColumnInfo(name = "birthday") val birthday: String?,
 )
