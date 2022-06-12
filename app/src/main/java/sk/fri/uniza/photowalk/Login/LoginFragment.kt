@@ -1,23 +1,19 @@
-package sk.fri.uniza.photowalk
+package sk.fri.uniza.photowalk.Login
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import sk.fri.uniza.photowalk.Database.Account
 import sk.fri.uniza.photowalk.Database.AppDatabase
+import sk.fri.uniza.photowalk.MapsActivity
+import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.LoginFragmentBinding
 
 
@@ -47,18 +43,11 @@ class LoginFragment : Fragment() {
 
         binding.LoginButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
-                val result = database.accountDao().getAccountId(binding.usernameLoginBox.text.toString(), binding.passwordLoginBox.text.toString())
-                if (result != null) {
+                if (checkAccount()) {
                     val myIntent = Intent(it.context, MapsActivity::class.java)
                     startActivity(myIntent)
-                } else {
-                    binding.usernameLoginBox.error = "Wrong username"
-                    Toast.makeText(requireActivity().application, "Wrong username", Toast.LENGTH_SHORT).show()
                 }
-
             }
-
-
         }
 
         binding.RegisterButtonLogin.setOnClickListener {
@@ -66,4 +55,16 @@ class LoginFragment : Fragment() {
         }
     }
 
+
+    suspend fun checkAccount() : Boolean {
+        val result = database.accountDao().getAccountId(binding.usernameLoginBox.text.toString(), binding.passwordLoginBox.text.toString())
+        return if (result != null) {
+            true
+        } else {
+            binding.usernameLoginBox.error = "Wrong username"
+            Toast.makeText(this.context, "Wrong username", Toast.LENGTH_SHORT).show()
+            false
+        }
+
+    }
 }

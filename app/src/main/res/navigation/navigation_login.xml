@@ -6,7 +6,7 @@
     app:startDestination="@id/loginFragment">
     <fragment
         android:id="@+id/registerFragment"
-        android:name="sk.fri.uniza.photowalk.RegisterFragment"
+        android:name="sk.fri.uniza.photowalk.Login.RegisterFragment"
         android:label="RegisterFragment"
         tools:layout="@layout/register_fragment">
         <action
@@ -18,7 +18,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="sk.fri.uniza.photowalk.LoginFragment"
+        android:name="sk.fri.uniza.photowalk.Login.LoginFragment"
         android:label="activity_login"
         tools:layout="@layout/login_fragment" >
         <action

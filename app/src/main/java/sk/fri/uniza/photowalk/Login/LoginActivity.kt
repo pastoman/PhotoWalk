@@ -1,13 +1,10 @@
-package sk.fri.uniza.photowalk
+package sk.fri.uniza.photowalk.Login
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import androidx.navigation.findNavController
-import sk.fri.uniza.photowalk.Database.AppDatabase
+import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.ActivityLoginBinding
 
 
@@ -16,7 +13,9 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityLoginBinding>(this, R.layout.activity_login)
+        val binding = DataBindingUtil.setContentView<ActivityLoginBinding>(this,
+            R.layout.activity_login
+        )
 
         supportActionBar?.hide()
         constraintLayout = binding.constraintLayout
