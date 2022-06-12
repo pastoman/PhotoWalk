@@ -7,10 +7,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
+import sk.fri.uniza.photowalk.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.MapsActivity
 import sk.fri.uniza.photowalk.R
@@ -59,6 +63,8 @@ class LoginFragment : Fragment() {
     suspend fun checkAccount() : Boolean {
         val result = database.accountDao().getAccountId(binding.usernameLoginBox.text.toString(), binding.passwordLoginBox.text.toString())
         return if (result != null) {
+            val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
+            model.setId(result.id)
             true
         } else {
             binding.usernameLoginBox.error = "Wrong username"

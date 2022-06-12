@@ -7,14 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
+import sk.fri.uniza.photowalk.AccountViewModel
 import sk.fri.uniza.photowalk.Database.Account
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.RegisterFragmentBinding
+import java.lang.Exception
 
 
 class RegisterFragment : Fragment() {
@@ -65,11 +71,20 @@ class RegisterFragment : Fragment() {
                 binding.usernameRegisterBox.text.toString(),
                 binding.passwordRegisterBox.text.toString()
             ))
+            val result = database.accountDao()
+                .getAccountId(binding.usernameRegisterBox.text.toString(),
+                    binding.passwordRegisterBox.text.toString())
+            val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
+            model.setId(result!!.id)
             Toast.makeText(this.context, "Account created",
                 Toast.LENGTH_LONG).show()
             true
         } catch (e : SQLiteConstraintException) {
             Toast.makeText(this.context, "Username or email is alredy registered",
+                Toast.LENGTH_LONG).show()
+            false
+        } catch (e : Exception) {
+            Toast.makeText(this.context, e.message,
                 Toast.LENGTH_LONG).show()
             false
         }
