@@ -37,7 +37,7 @@ class RegisterFragment : Fragment() {
         binding.RegisterButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 if (registerAccount()) {
-                    it.findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                    it.findNavController().navigate(R.id.action_registerFragment_to_accountCreationFragment)
                 }
             }
         }

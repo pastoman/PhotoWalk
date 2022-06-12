@@ -1,81 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <ImageButton
-        android:id="@+id/profilePicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/avatars" />
+    <data>
 
-    <TextView
-        android:id="@+id/profileName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/profileNameEditText"
-        app:layout_constraintStart_toStartOf="@+id/profileNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/profilePicture"
-        app:layout_constraintVertical_bias="0.831" />
+    </data>
 
-    <EditText
-        android:id="@+id/profileNameEditText"
-        android:layout_width="323dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="80dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintStart_toStartOf="@+id/profilePicture"
-        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/profileSurname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:text="Surname"
-        app:layout_constraintBottom_toTopOf="@+id/profileSurnameEditText"
-        app:layout_constraintStart_toStartOf="@+id/profileSurnameEditText" />
+        <ImageButton
+            android:id="@+id/profilePicture"
+            android:layout_width="85dp"
+            android:layout_height="91dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+            android:foreground="@drawable/quantum_ic_clear_grey600_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
 
-    <EditText
-        android:id="@+id/profileSurnameEditText"
-        android:layout_width="324dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="44dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toEndOf="@+id/profileNameEditText"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/profileNameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/profileNameEditText" />
+        <TextView
+            android:id="@+id/profileName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:text="Name"
+            app:layout_constraintBottom_toTopOf="@+id/profileNameEditText"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicture"
+            app:layout_constraintVertical_bias="0.588" />
 
-    <EditText
-        android:id="@+id/profileBirthday"
-        android:layout_width="325dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="44dp"
-        android:ems="10"
-        android:inputType="date"
-        app:layout_constraintEnd_toEndOf="@+id/profileSurnameEditText"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="@+id/profileSurnameEditText"
-        app:layout_constraintTop_toBottomOf="@+id/profileSurnameEditText" />
+        <EditText
+            android:id="@+id/profileNameEditText"
+            android:layout_width="323dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="36dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+            app:layout_constraintStart_toStartOf="@+id/profilePicture"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:text="Birthday"
-        app:layout_constraintBottom_toTopOf="@+id/profileBirthday"
-        app:layout_constraintStart_toStartOf="@+id/profileBirthday" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/profileSurname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:layout_marginBottom="12dp"
+            android:text="Surname"
+            app:layout_constraintBottom_toTopOf="@+id/profileSurnameEditText"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/profileSurnameEditText"
+            android:layout_width="324dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="44dp"
+            android:ems="10"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="@+id/profileNameEditText"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/profileNameEditText"
+            app:layout_constraintTop_toBottomOf="@+id/profileNameEditText" />
+
+        <TextView
+            android:id="@+id/profileMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:text="Month of birth"
+            app:layout_constraintBottom_toTopOf="@+id/month"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/day"
+            app:layout_constraintVertical_bias="0.523" />
+
+        <TextView
+            android:id="@+id/profileYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:text="Year of birth"
+            app:layout_constraintBottom_toTopOf="@+id/year"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/month"
+            app:layout_constraintVertical_bias="0.44" />
+
+        <TextView
+            android:id="@+id/profileDay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="44dp"
+            android:text="Day of birth"
+            app:layout_constraintBottom_toTopOf="@+id/day"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileSurnameEditText"
+            app:layout_constraintVertical_bias="0.62" />
+
+        <Spinner
+            android:id="@+id/month"
+            android:layout_width="167dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="40dp"
+            android:entries="@array/months"
+            android:spinnerMode="dialog"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="@+id/day"
+            app:layout_constraintTop_toBottomOf="@+id/day" />
+
+        <Spinner
+            android:id="@+id/year"
+            android:layout_width="103dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="40dp"
+            android:spinnerMode="dialog"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/month" />
+
+        <Spinner
+            android:id="@+id/day"
+            android:layout_width="103dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="44dp"
+            android:layout_marginTop="48dp"
+            android:spinnerMode="dialog"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profileSurnameEditText" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
