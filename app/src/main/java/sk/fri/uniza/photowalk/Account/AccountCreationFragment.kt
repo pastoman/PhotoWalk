@@ -1,28 +1,33 @@
-package sk.fri.uniza.photowalk.Login
+package sk.fri.uniza.photowalk.Account
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
+import androidx.core.graphics.drawable.toBitmap
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
-import sk.fri.uniza.photowalk.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Database.UserData
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.AccountCreationFragmentBinding
+import java.io.*
 import java.text.SimpleDateFormat
 import java.time.YearMonth
 import java.util.*
+import kotlin.math.min
+import kotlin.math.roundToInt
+
 
 class AccountCreationFragment : Fragment() {
 
@@ -53,15 +58,20 @@ class AccountCreationFragment : Fragment() {
         binding.confirmButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
+                val picture = binding.profilePicture.drawable.toBitmap()
+                val byteArray: ByteArray = convertBitmapToByteArray(picture)
                 database.userDataDao().addData(
-                    UserData(model.id.value!!,
+                    UserData(
+                        model.id.value!!,
                         binding.profileNameEditText.text.toString(),
                         binding.profileSurnameEditText.text.toString(),
                         binding.country.selectedItem.toString(),
                         binding.day.selectedItem.toString() +
                                 ".${binding.month.selectedItem.toString()}" +
-                                ".${binding.year.selectedItem.toString()}"
-                    ))
+                                ".${binding.year.selectedItem.toString()}",
+                        byteArray
+                        ))
+                it.findNavController().navigate(R.id.action_accountCreationFragment_to_loginFragment)
             }
 
         }
@@ -71,7 +81,7 @@ class AccountCreationFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == 100){
-            binding.profilePicture.setImageURI(data?.data) // handle chosen image
+            binding.profilePicture.setImageURI(data?.data)
         }
     }
 
@@ -102,5 +112,33 @@ class AccountCreationFragment : Fragment() {
         binding.year.adapter = ArrayAdapter(requireActivity().application,
             R.layout.spinner_item,
             years)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
+        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
+    }
+
+    private fun convertBitmapToByteArray(picture: Bitmap): ByteArray {
+        var byteCount = picture.byteCount
+
+        val stream = ByteArrayOutputStream()
+        val ratio: Float = min(
+            1000.toFloat() / picture.width,
+            1000.toFloat() / picture.height
+        )
+        val width =
+            (ratio * picture.width).roundToInt()
+        val height =
+            (ratio * picture.height).roundToInt()
+
+        val resizedBitmap = Bitmap.createScaledBitmap(
+            picture, width,
+            height, false
+        )
+
+        byteCount = resizedBitmap.byteCount
+        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
+        return stream.toByteArray()
     }
 }

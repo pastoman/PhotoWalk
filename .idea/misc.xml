@@ -3,19 +3,27 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/account_creation_fragment.xml" value="0.15564373897707232" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/account_creation_fragment.xml" value="0.222397476340694" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/login_fragment.xml" value="0.25" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/register_fragment.xml" value="0.33" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/account_creation_fragment.xml" value="0.33" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/account_edit_fragment.xml" value="0.33" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/account_fragment.xml" value="0.153125" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/account_info_fragment.xml" value="0.4117647058823529" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/activity_login.xml" value="0.18802083333333333" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/activity_login2.xml" value="0.36666666666666664" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/activity_maps.xml" value="0.358695652173913" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/custom_info_contents.xml" value="0.36666666666666664" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/fragment_maps.xml" value="0.36666666666666664" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/fragment_maps_fragment2hbhj.xml" value="0.18385416666666668" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/fragment_maps_fragmenttre.xml" value="0.36666666666666664" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/fragment_register.xml" value="0.18802083333333333" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/friends_list_fragment.xml" value="0.36666666666666664" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/login_fragment.xml" value="0.33" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/maps_fragment.xml" value="0.18385416666666668" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/register_fragment.xml" value="0.22" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/spinner_item.xml" value="0.18385416666666668" />
-        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/menu/current_place_menu.xml" value="0.10555555555555556" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/menu/current_place_menu.xml" value="0.33" />
       </map>
     </option>
   </component>

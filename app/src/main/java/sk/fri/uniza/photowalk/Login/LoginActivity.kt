@@ -1,12 +1,9 @@
 package sk.fri.uniza.photowalk.Login
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
-import sk.fri.uniza.photowalk.AccountViewModel
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.ActivityLoginBinding
 

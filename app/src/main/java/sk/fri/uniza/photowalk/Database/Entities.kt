@@ -1,5 +1,6 @@
 package sk.fri.uniza.photowalk.Database
 
+import android.graphics.Bitmap
 import androidx.room.*
 import androidx.room.ForeignKey.CASCADE
 
@@ -19,4 +20,5 @@ data class UserData(
     @ColumnInfo(name = "surname") val surname: String?,
     @ColumnInfo(name = "country") val country: String?,
     @ColumnInfo(name = "birthday") val birthday: String?,
+    @ColumnInfo(name = "profile_picture", typeAffinity = ColumnInfo.BLOB) val picture: ByteArray?
 )

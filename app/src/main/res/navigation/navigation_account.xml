@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_account"
+    app:startDestination="@id/accountInfoFragment">
+
+    <fragment
+        android:id="@+id/accountInfoFragment"
+        android:name="sk.fri.uniza.photowalk.Account.AccountInfoFragment"
+        android:label="fragment_account_info"
+        tools:layout="@layout/account_info_fragment" >
+        <action
+            android:id="@+id/action_accountInfoFragment_to_accountEditFragment"
+            app:destination="@id/accountEditFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/accountEditFragment"
+        android:name="sk.fri.uniza.photowalk.Account.AccountEditFragment"
+        android:label="account_edit_fragment"
+        tools:layout="@layout/account_edit_fragment" >
+        <action
+            android:id="@+id/action_accountEditFragment_to_accountInfoFragment"
+            app:destination="@id/accountInfoFragment"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/accountInfoFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

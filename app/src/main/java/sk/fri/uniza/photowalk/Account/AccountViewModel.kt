@@ -1,4 +1,4 @@
-package sk.fri.uniza.photowalk
+package sk.fri.uniza.photowalk.Account
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
