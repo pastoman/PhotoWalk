@@ -11,7 +11,7 @@
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".Map.MapsActivity">
+        tools:context=".Friends.FriendProfileActivity">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
@@ -26,18 +26,7 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:icon="@android:drawable/ic_dialog_map"
-                android:text="Map" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:text="Gallery" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Friends" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
@@ -47,8 +36,8 @@
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/mainFragment"
-            android:name="sk.fri.uniza.photowalk.Map.MapsFragment"
+            android:id="@+id/mainFriendFragment"
+            android:name="sk.fri.uniza.photowalk.Friends.FriendProfilePreviewFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -57,6 +46,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tabLayout"
             app:layout_constraintVertical_bias="0.733"
-            tools:context=".Map.MapsActivity" />
+            tools:context=".MainActivity" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

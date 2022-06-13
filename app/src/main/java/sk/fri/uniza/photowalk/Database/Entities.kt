@@ -15,10 +15,16 @@ data class Account(
 
 @Entity(tableName = "user_data")
 data class UserData(
-    @PrimaryKey(autoGenerate = true) val id : Int,
+    @PrimaryKey val id : Int,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "surname") val surname: String?,
     @ColumnInfo(name = "country") val country: String?,
     @ColumnInfo(name = "birthday") val birthday: String?,
     @ColumnInfo(name = "profile_picture", typeAffinity = ColumnInfo.BLOB) val picture: ByteArray?
+)
+
+@Entity(tableName = "friend", primaryKeys = ["user_id", "friend_id"])
+data class Friend(
+    @ColumnInfo(name = "user_id") val userId: Int,
+    @ColumnInfo(name = "friend_id") val friendId: Int
 )

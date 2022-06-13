@@ -3,6 +3,7 @@ package sk.fri.uniza.photowalk.Database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy.IGNORE
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 
@@ -10,6 +11,12 @@ import androidx.room.Query
 interface AccountDao {
     @Query("SELECT * FROM account WHERE username = :username and password = :password")
     suspend fun getAccountId(username: String, password: String) : Account?
+
+    @Query("SELECT * FROM account WHERE id = :userId")
+    suspend fun findUsername(userId: Int) : Account?
+
+    @Query("SELECT * FROM account WHERE username = :username")
+    suspend fun findFriendId(username: String) : Account?
 
     @Insert
     suspend fun addAccount(user: Account)
@@ -23,4 +30,17 @@ interface UserDataDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun addData(data : UserData)
+}
+
+@Dao
+interface FriendDao {
+
+    @Query("SELECT * FROM friend WHERE user_id = :userId")
+    suspend fun getAllFriends(userId: Int) : List<Friend>
+
+    @Insert(onConflict = IGNORE)
+    suspend fun addFriend(friend: Friend)
+
+    @Delete
+    suspend fun deleteFriend(friend: Friend)
 }

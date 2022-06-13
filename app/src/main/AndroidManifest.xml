@@ -14,7 +14,9 @@
         android:roundIcon="@drawable/photowalk"
         android:supportsRtl="true"
         android:theme="@style/Theme.PhotoWalk">
-
+        <activity
+            android:name=".Friends.FriendProfileActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -41,7 +43,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Map.MapsActivity"
+            android:name=".MainActivity"
             android:label="@string/title_activity_maps" />
     </application>
 

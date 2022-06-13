@@ -1,56 +1,43 @@
-package sk.fri.uniza.photowalk.Account
+package sk.fri.uniza.photowalk.Friends
 
-import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
+import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
-import sk.fri.uniza.photowalk.Login.LoginActivity
 import sk.fri.uniza.photowalk.R
-import sk.fri.uniza.photowalk.databinding.AccountInfoFragmentBinding
+import sk.fri.uniza.photowalk.databinding.AccountFragmentBinding
+import sk.fri.uniza.photowalk.databinding.FragmentFriendProfilePreviewBinding
+import java.io.ByteArrayOutputStream
+import kotlin.math.min
+import kotlin.math.roundToInt
 
 
-class AccountInfoFragment : Fragment() {
+class FriendProfilePreviewFragment : Fragment() {
 
-    lateinit var binding: AccountInfoFragmentBinding
-    lateinit var database: AppDatabase
+    private lateinit var binding: FragmentFriendProfilePreviewBinding
+    private lateinit var database: AppDatabase
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.account_info_fragment, container, false)
-
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_profile_preview, container, false)
         database = AppDatabase.getDatabase(requireContext())
 
-        return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
         loadInfo()
 
-        binding.edit.setOnClickListener {
-            it.findNavController().navigate(R.id.action_accountInfoFragment_to_accountEditFragment)
-        }
-
-        binding.logout.setOnClickListener {
-            requireActivity().finish()
-            val intent = Intent(it.context, LoginActivity::class.java)
-            startActivity(intent)
-        }
-
+        return binding.root
     }
 
     private fun loadInfo() {
@@ -75,5 +62,4 @@ class AccountInfoFragment : Fragment() {
     private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
         return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
     }
-
 }

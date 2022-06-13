@@ -14,7 +14,7 @@ import androidx.navigation.findNavController
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
-import sk.fri.uniza.photowalk.Map.MapsActivity
+import sk.fri.uniza.photowalk.MainActivity
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.LoginFragmentBinding
 
@@ -47,7 +47,7 @@ class LoginFragment : Fragment() {
         binding.LoginButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 if (checkAccount()) {
-                    val intent = Intent(it.context, MapsActivity::class.java)
+                    val intent = Intent(it.context, MainActivity::class.java)
                     intent.putExtra("id", viewModel.id.value)
                     startActivity(intent)
                     requireActivity().finish()
