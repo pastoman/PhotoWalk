@@ -1,6 +1,7 @@
 package sk.fri.uniza.photowalk
 
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -11,14 +12,16 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import sk.fri.uniza.photowalk.Account.AccountFragment
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Friends.FriendsListFragment
+import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
 import sk.fri.uniza.photowalk.Gallery.GalleryFragment
+import sk.fri.uniza.photowalk.Gallery.GalleryPreviewFragment
 import sk.fri.uniza.photowalk.Map.MapsFragment
 import sk.fri.uniza.photowalk.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity(), OnTabSelectedListener {
     private lateinit var binding : ActivityMainBinding
-    private lateinit var viewModel: AccountViewModel
+    private val viewModel: MainActivityViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +30,10 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
             this,
             R.layout.activity_main
         )
-        viewModel = ViewModelProvider(this).get(AccountViewModel::class.java)
-        viewModel.setId(intent.getIntExtra("id",0))
+        val accountModel = ViewModelProvider(this).get(AccountViewModel::class.java)
+        accountModel.setId(intent.getIntExtra("id",0))
+
+        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(viewModel.tabIndex.value!!))
         binding.tabLayout.addOnTabSelectedListener(this)
         supportActionBar?.hide()
 
@@ -42,6 +47,7 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
         if (tab != null) {
+            viewModel.setTabIndex(tab.position)
             val fragment : Fragment = when (tab.position) {
                 0 -> MapsFragment()
                 1 -> GalleryFragment()

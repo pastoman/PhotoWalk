@@ -12,6 +12,10 @@ class GalleryViewModel : ViewModel() {
     val pictures : LiveData<List<Picture>>
         get() = _picturesLiveData
 
+    private var _picture = MutableLiveData<Picture>()
+    val picture : LiveData<Picture>
+        get() = _picture
+
     init {
         _picturesLiveData.value = _pictures
     }
@@ -26,8 +30,12 @@ class GalleryViewModel : ViewModel() {
         _picturesLiveData.value = _pictures
     }
 
-    fun clear() {
+    fun clearPictures() {
         _pictures.clear()
         _picturesLiveData.value = _pictures
+    }
+
+    fun setPicture(picture: Picture) {
+        _picture.value = picture
     }
 }

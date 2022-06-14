@@ -1,4 +1,4 @@
-package sk.fri.uniza.photowalk.Gallery
+package sk.fri.uniza.photowalk.Friends
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,20 +6,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
+import sk.fri.uniza.photowalk.Gallery.GalleryViewModel
+import sk.fri.uniza.photowalk.Gallery.Picture
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
+import sk.fri.uniza.photowalk.databinding.FriendGalleryFragmentBinding
 import sk.fri.uniza.photowalk.databinding.GalleryFragmentBinding
 
+class FriendGalleryFragment : Fragment() {
 
-class GalleryFragment : Fragment() {
-
-    private lateinit var binding: GalleryFragmentBinding
+    private lateinit var binding: FriendGalleryFragmentBinding
     private lateinit var database: AppDatabase
     private lateinit var viewModel: GalleryViewModel
 
@@ -28,7 +29,7 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.gallery_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.friend_gallery_fragment, container, false)
         return binding.root
     }
 
@@ -37,6 +38,8 @@ class GalleryFragment : Fragment() {
         database = AppDatabase.getDatabase(requireContext())
         viewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
         initializeViewModel()
+        val friendViewModel = ViewModelProvider(requireActivity())[FriendProfileActivityViewModel::class.java]
+        friendViewModel.setTabIndex(TAB_INDEX)
     }
 
     private fun initializeViewModel() {
@@ -58,6 +61,10 @@ class GalleryFragment : Fragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        private const val TAB_INDEX = 0
     }
 
 }

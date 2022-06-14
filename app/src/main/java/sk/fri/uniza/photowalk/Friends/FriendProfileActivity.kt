@@ -20,12 +20,14 @@ class FriendProfileActivity : AppCompatActivity(), TabLayout.OnTabSelectedListen
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView<ActivityFriendProfileBinding>(
+        binding = DataBindingUtil.setContentView(
             this,
             R.layout.activity_friend_profile
         )
-        viewModel = ViewModelProvider(this).get(AccountViewModel::class.java)
+        viewModel = ViewModelProvider(this)[AccountViewModel::class.java]
         viewModel.setId(intent.getIntExtra("id",0))
+        val friendViewModel = ViewModelProvider(this)[FriendProfileActivityViewModel::class.java]
+        binding.tabLayout.selectTab(binding.tabLayout.getTabAt(friendViewModel.tabIndex.value!!))
         binding.tabLayout.addOnTabSelectedListener(this)
         supportActionBar?.hide()
 
@@ -38,6 +40,7 @@ class FriendProfileActivity : AppCompatActivity(), TabLayout.OnTabSelectedListen
     override fun onTabSelected(tab: TabLayout.Tab?) {
         if (tab != null) {
             val fragment : Fragment = when (tab.position) {
+                0 -> FriendGalleryFragment()
                 else -> FriendProfilePreviewFragment()
             }
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()

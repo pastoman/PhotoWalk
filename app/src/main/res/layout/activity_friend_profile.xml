@@ -37,7 +37,7 @@
 
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/mainFriendFragment"
-            android:name="sk.fri.uniza.photowalk.Friends.FriendProfilePreviewFragment"
+            android:name="sk.fri.uniza.photowalk.Friends.FriendGalleryFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

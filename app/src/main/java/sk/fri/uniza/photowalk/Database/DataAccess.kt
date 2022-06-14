@@ -54,6 +54,6 @@ interface UserPicturesDao {
     @Insert
     suspend fun addPicture(picture: UserPictures)
 
-    @Delete
-    suspend fun deletePicture(picture: UserPictures)
+    @Query("DELETE FROM user_pictures WHERE id_picture = :pictureId")
+    suspend fun deletePicture(pictureId: Int)
 }

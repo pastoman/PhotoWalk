@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         database = AppDatabase.getDatabase(requireActivity().application)
-        viewModel = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
         binding.LoginButton.setOnClickListener {
             viewLifecycleOwner.lifecycleScope.launch {
                 if (checkAccount()) {

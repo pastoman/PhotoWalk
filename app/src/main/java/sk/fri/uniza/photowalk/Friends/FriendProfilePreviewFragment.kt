@@ -1,7 +1,5 @@
 package sk.fri.uniza.photowalk.Friends
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -16,16 +14,12 @@ import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
-import sk.fri.uniza.photowalk.databinding.AccountFragmentBinding
-import sk.fri.uniza.photowalk.databinding.FragmentFriendProfilePreviewBinding
-import java.io.ByteArrayOutputStream
-import kotlin.math.min
-import kotlin.math.roundToInt
+import sk.fri.uniza.photowalk.databinding.FriendProfilePreviewFragmentBinding
 
 
 class FriendProfilePreviewFragment : Fragment() {
 
-    private lateinit var binding: FragmentFriendProfilePreviewBinding
+    private lateinit var binding: FriendProfilePreviewFragmentBinding
     private lateinit var database: AppDatabase
 
     override fun onCreateView(
@@ -33,11 +27,12 @@ class FriendProfilePreviewFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_friend_profile_preview, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.friend_profile_preview_fragment, container, false)
         database = AppDatabase.getDatabase(requireContext())
 
         loadInfo()
-
+        val friendViewModel = ViewModelProvider(requireActivity())[FriendProfileActivityViewModel::class.java]
+        friendViewModel.setTabIndex(TAB_INDEX)
         return binding.root
     }
 
@@ -57,5 +52,9 @@ class FriendProfilePreviewFragment : Fragment() {
                     Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    companion object {
+        private const val TAB_INDEX = 1
     }
 }
