@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Login.LoginActivity
 import sk.fri.uniza.photowalk.R
+import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.AccountInfoFragmentBinding
 
 
@@ -58,7 +59,7 @@ class AccountInfoFragment : Fragment() {
             try {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
                 val result = database.userDataDao().getData(model.id.value!!)
-                val picture = convertByteArrayToBitmap(result[0].picture!!)
+                val picture = Util.convertByteArrayToBitmap(result[0].picture!!)
                 binding.profilePicture.setImageBitmap(picture)
                 binding.profileNameValue.text = result[0].name
                 binding.profileSurnameValue.text = result[0].surname
@@ -71,9 +72,5 @@ class AccountInfoFragment : Fragment() {
         }
     }
 
-    @Suppress("DEPRECATION")
-    private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-    }
 
 }

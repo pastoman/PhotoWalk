@@ -28,3 +28,13 @@ data class Friend(
     @ColumnInfo(name = "user_id") val userId: Int,
     @ColumnInfo(name = "friend_id") val friendId: Int
 )
+
+@Entity(tableName = "user_pictures")
+data class UserPictures(
+    @PrimaryKey(autoGenerate = true) val id_picture: Int,
+    @ColumnInfo(name = "id_account") val id_account: Int,
+    @ColumnInfo(name = "picture") val picture: ByteArray,
+    @ColumnInfo(name = "latitude") val latitude: Double,
+    @ColumnInfo(name = "longitude") val longitude: Double,
+    @ColumnInfo(name = "date") val date: String
+)

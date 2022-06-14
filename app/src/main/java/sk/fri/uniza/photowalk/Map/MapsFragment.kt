@@ -1,20 +1,28 @@
 package sk.fri.uniza.photowalk.Map
 
 import android.Manifest
+import android.R.attr
 import android.annotation.SuppressLint
-import android.content.DialogInterface
+import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AlertDialog
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -22,17 +30,21 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.libraries.places.api.model.Place
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.maps.route.extensions.drawRouteOnMap
 import com.maps.route.extensions.moveCameraOnMap
 import com.maps.route.model.TravelMode
+import kotlinx.coroutines.launch
+import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.BuildConfig
+import sk.fri.uniza.photowalk.Database.AppDatabase
+import sk.fri.uniza.photowalk.Database.UserPictures
 import sk.fri.uniza.photowalk.R
+import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.MapsFragmentBinding
+import java.lang.Exception
+
 
 class MapsFragment : Fragment() {
 
@@ -42,6 +54,7 @@ class MapsFragment : Fragment() {
     private lateinit var binding: MapsFragmentBinding
     private lateinit var placesClient: PlacesClient
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private lateinit var database: AppDatabase
     private var mMap: GoogleMap? = null
     private val defaultLocation = LatLng(49.222229, 18.740134)
     private var locationPermissionGranted = false
@@ -97,6 +110,7 @@ class MapsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        database = AppDatabase.getDatabase(requireContext())
         if (savedInstanceState != null) {
             lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION)
         }
@@ -107,6 +121,41 @@ class MapsFragment : Fragment() {
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
+
+        binding.takePhoto.setOnClickListener {
+
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            try {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            } catch (e: ActivityNotFoundException) {
+             // display error state to the user
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
+            try {
+                val model = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
+                val picture = data!!.extras!!.get("data") as Bitmap
+                val userPicture = UserPictures(
+                    0,
+                    model.id.value!!,
+                    Util.convertBitmapToByteArray(picture),
+                    lastKnownLocation!!.latitude,
+                    lastKnownLocation!!.longitude,
+                    Util.CurrentDateInString()
+                )
+                viewLifecycleOwner.lifecycleScope.launch {
+                    database.userPicturesDao().addPicture(userPicture)
+                }
+            } catch (e : Exception) {
+                Toast.makeText(requireContext(), e.message,
+                    Toast.LENGTH_LONG).show()
+            }
+
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -231,5 +280,7 @@ class MapsFragment : Fragment() {
 
         // Used for selecting the current place.
         private const val M_MAX_ENTRIES = 5
+
+        private const val REQUEST_IMAGE_CAPTURE = 2
     }
 }

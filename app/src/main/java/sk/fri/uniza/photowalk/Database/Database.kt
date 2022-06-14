@@ -7,9 +7,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Account::class, UserData::class, Friend::class], version = 1)
+@Database(entities = [Account::class, UserData::class, Friend::class, UserPictures::class], version = 1)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun accountDao(): AccountDao
+
+    abstract fun userDataDao(): UserDataDao
+
+    abstract fun friendDao(): FriendDao
+
+    abstract fun userPicturesDao() : UserPicturesDao
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -30,8 +36,4 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
     }
-
-    abstract fun userDataDao(): UserDataDao
-
-    abstract fun friendDao(): FriendDao
 }

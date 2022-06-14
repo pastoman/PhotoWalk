@@ -44,3 +44,16 @@ interface FriendDao {
     @Delete
     suspend fun deleteFriend(friend: Friend)
 }
+
+@Dao
+interface UserPicturesDao {
+
+    @Query("SELECT * FROM user_pictures WHERE  id_account = :userId")
+    suspend fun getAllPictures(userId: Int) : List<UserPictures>
+
+    @Insert
+    suspend fun addPicture(picture: UserPictures)
+
+    @Delete
+    suspend fun deletePicture(picture: UserPictures)
+}

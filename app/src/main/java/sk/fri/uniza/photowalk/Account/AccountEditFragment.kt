@@ -20,6 +20,7 @@ import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Database.UserData
 import sk.fri.uniza.photowalk.R
+import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.AccountCreationFragmentBinding
 import sk.fri.uniza.photowalk.databinding.AccountEditFragmentBinding
 import java.io.ByteArrayOutputStream
@@ -60,7 +61,7 @@ class AccountEditFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
                 val picture = binding.profilePicture.drawable.toBitmap()
-                val byteArray: ByteArray = convertBitmapToByteArray(picture)
+                val byteArray: ByteArray = Util.convertBitmapToByteArray(picture)
                 database.userDataDao().addData(
                     UserData(
                         model.id.value!!,
@@ -84,7 +85,7 @@ class AccountEditFragment : Fragment() {
             try {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
                 val result = database.userDataDao().getData(model.id.value!!)
-                val picture = convertByteArrayToBitmap(result[0].picture!!)
+                val picture = Util.convertByteArrayToBitmap(result[0].picture!!)
                 binding.profilePicture.setImageBitmap(picture)
                 binding.profileNameEditText.setText(result[0].name)
                 binding.profileSurnameEditText.setText(result[0].surname)
@@ -149,33 +150,5 @@ class AccountEditFragment : Fragment() {
         binding.year.adapter = ArrayAdapter(requireActivity().application,
             R.layout.spinner_item,
             years)
-    }
-
-    @Suppress("DEPRECATION")
-    private fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
-        return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
-    }
-
-    private fun convertBitmapToByteArray(picture: Bitmap): ByteArray {
-        var byteCount = picture.byteCount
-
-        val stream = ByteArrayOutputStream()
-        val ratio: Float = min(
-            1000.toFloat() / picture.width,
-            1000.toFloat() / picture.height
-        )
-        val width =
-            (ratio * picture.width).roundToInt()
-        val height =
-            (ratio * picture.height).roundToInt()
-
-        val resizedBitmap = Bitmap.createScaledBitmap(
-            picture, width,
-            height, false
-        )
-
-        byteCount = resizedBitmap.byteCount
-        resizedBitmap.compress(Bitmap.CompressFormat.PNG, 100, stream)
-        return stream.toByteArray()
     }
 }

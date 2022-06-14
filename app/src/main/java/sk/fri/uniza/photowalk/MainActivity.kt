@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import sk.fri.uniza.photowalk.Account.AccountFragment
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Friends.FriendsListFragment
+import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.Map.MapsFragment
 import sk.fri.uniza.photowalk.databinding.ActivityMainBinding
 
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
         if (tab != null) {
             val fragment : Fragment = when (tab.position) {
                 0 -> MapsFragment()
+                1 -> GalleryFragment()
                 2 -> FriendsListFragment()
                 else -> AccountFragment()
             }
