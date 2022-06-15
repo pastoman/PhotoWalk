@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_gallery"
+    app:startDestination="@id/galleryPreviewFragment">
+
+    <fragment
+        android:id="@+id/galleryPreviewFragment"
+        android:name="sk.fri.uniza.photowalk.Gallery.GalleryPreviewFragment"
+        android:label="GalleryPreviewFragment"
+        tools:layout="@layout/fragment_gallery_preview">
+        <action
+            android:id="@+id/action_galleryPreviewFragment_to_picturePreviewFragment"
+            app:destination="@id/picturePreviewFragment"
+            app:popUpTo="@id/galleryPreviewFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/picturePreviewFragment"
+        android:name="sk.fri.uniza.photowalk.Gallery.PicturePreviewFragment"
+        android:label="PicturePreviewFragment"
+        tools:layout="@layout/picture_preview_fragment">
+        <action
+            android:id="@+id/action_picturePreviewFragment_to_galleryPreviewFragment"
+            app:destination="@id/galleryPreviewFragment" />
+    </fragment>
+</navigation>
