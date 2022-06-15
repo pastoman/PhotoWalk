@@ -28,12 +28,17 @@ class FriendProfilePreviewFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.friend_profile_preview_fragment, container, false)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         database = AppDatabase.getDatabase(requireContext())
 
         loadInfo()
         val friendViewModel = ViewModelProvider(requireActivity())[FriendProfileActivityViewModel::class.java]
         friendViewModel.setTabIndex(TAB_INDEX)
-        return binding.root
     }
 
     private fun loadInfo() {

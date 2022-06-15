@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
+import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
+import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.AccountFragmentBinding
 
@@ -28,4 +31,12 @@ class AccountFragment : Fragment() {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val mainViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        mainViewModel.setTabIndex(TAB_INDEX)
+    }
+    companion object {
+        private const val TAB_INDEX = 3
+    }
 }

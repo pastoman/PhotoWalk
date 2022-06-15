@@ -12,6 +12,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
+import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.GalleryFragmentBinding
@@ -37,30 +38,13 @@ class GalleryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         database = AppDatabase.getDatabase(requireContext())
         viewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
-        initializeViewModel()
+        val mainViewModel =ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        mainViewModel.setTabIndex(TAB_INDEX)
     }
 
-    private fun initializeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.setFromMap(false)
-            viewModel.setEditable(true)
-            viewModel.clearPictures()
-            val model = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
-            val result = database.userPicturesDao().getAllPictures(model.id.value!!)
-            if (result.isNotEmpty()) {
-                for (item in result) {
-                    viewModel.addPicture(
-                        Picture(
-                            item.id_picture,
-                            Util.convertByteArrayToBitmap(item.picture),
-                            item.latitude,
-                            item.longitude,
-                            Util.StringToDate(item.date)
-                        )
-                    )
-                }
-            }
-        }
+
+    companion object {
+        private const val TAB_INDEX = 1
     }
 
 }

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
+import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.FriendsListFragmentBinding
 import java.lang.Exception
@@ -34,8 +35,9 @@ class FriendsListFragment : Fragment() {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, R.layout.friends_list_fragment, container, false)
         database = AppDatabase.getDatabase(requireContext())
-        viewModel = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
-
+        viewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
+        val mainViewModel =ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        mainViewModel.setTabIndex(TAB_INDEX)
         binding.addFriendButton.setOnClickListener {
             showFriendDialog()
         }
@@ -103,4 +105,7 @@ class FriendsListFragment : Fragment() {
         builder.show()
     }
 
+    companion object {
+        private const val TAB_INDEX = 2
+    }
 }

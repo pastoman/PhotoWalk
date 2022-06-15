@@ -25,14 +25,8 @@ import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.*
+import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.maps.route.extensions.drawRouteOnMap
@@ -43,6 +37,8 @@ import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.BuildConfig
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Database.UserPictures
+import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
+import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.Gallery.GalleryViewModel
 import sk.fri.uniza.photowalk.Gallery.Picture
 import sk.fri.uniza.photowalk.Gallery.PicturePreviewFragment
@@ -62,6 +58,7 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var database: AppDatabase
     private lateinit var accountViewModel: AccountViewModel
+    private lateinit var mainViewModel: MainActivityViewModel
     private val timer = Timer(this)
     private var mMap: GoogleMap? = null
     private val defaultLocation = LatLng(49.222229, 18.740134)
@@ -76,21 +73,24 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         // Construct a PlacesClient
         getLocationPermission()
 
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI()
 
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation()
 
         markers = Markers(mMap!!, accountViewModel.id.value!!, database)
-        lifecycleScope.launch {
-            markers.placeMarkers()
+        viewLifecycleOwner.lifecycleScope.launch {
+            markers.initializeGalleryViewModel(requireActivity())
         }
+        val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
+        galleryViewModel.pictures.observe(requireActivity()) {
+            lifecycleScope.launch {
+                markers.updateMarkers()
+            }
+        }
+
         timer.startTimer()
-        if (lastKnownLocation != null) {
-            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                LatLng(lastKnownLocation!!.latitude,
-                    lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
+//        if (lastKnownLocation != null) {
+//            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+//                LatLng(lastKnownLocation!!.latitude,
+//                    lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
 //            val source = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude) //starting point (LatLng)
 //            val destination = defaultLocation // ending point (LatLng)
 
@@ -105,7 +105,8 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
 //                    context = requireActivity().application //Activity context
 //                )
 //            }
-        }
+        //}
+
     }
 
     override fun onInfoWindowClick(marker: Marker) {
@@ -119,19 +120,29 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 result.longitude,
                 Util.StringToDate(result.date)
             )
-            galleryViewModel.setPicture(picture)
-            galleryViewModel.setFromMap(true)
-            galleryViewModel.setEditable(true)
-            val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-            ft.replace(R.id.mainFragment, PicturePreviewFragment())
-            ft.addToBackStack(null)
-            ft.commit()
+            if (result.id_account == accountViewModel.id.value!!) {
+                galleryViewModel.setPicture(picture)
+                galleryViewModel.setFromMap(true)
+                galleryViewModel.setEditable(true)
+                val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+                ft.replace(R.id.mainFragment, PicturePreviewFragment())
+                ft.addToBackStack(null)
+                ft.commit()
+            } else {
+                galleryViewModel.setPicture(picture)
+                galleryViewModel.setFromMap(true)
+                galleryViewModel.setEditable(false)
+                val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+                ft.replace(R.id.mainFragment, PicturePreviewFragment())
+                ft.addToBackStack(null)
+                ft.commit()
+            }
+
         }
     }
 
     override fun onTimerFinish() {
        viewLifecycleOwner.lifecycleScope.launch {
-
            markers.updateMarkers()
            timer.startTimer()
        }
@@ -148,6 +159,7 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
 
     override fun onDestroyView() {
         super.onDestroyView()
+        mainViewModel.setPosition(null)
         timer.stopTimer()
     }
 
@@ -155,17 +167,15 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         super.onViewCreated(view, savedInstanceState)
         database = AppDatabase.getDatabase(requireContext())
         accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
-        if (savedInstanceState != null) {
-            lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION)
-        }
-        Places.initialize(requireActivity().application, BuildConfig.MAPS_API_KEY)
-        placesClient = Places.createClient(requireActivity().application)
+        mainViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        mainViewModel.setTabIndex(TAB_INDEX)
+        Places.initialize(requireContext(), BuildConfig.MAPS_API_KEY)
+        placesClient = Places.createClient(requireContext())
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity().application)
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
-
         binding.takePhoto.setOnClickListener {
 
             val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -181,17 +191,20 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
             try {
-                val picture = data!!.extras!!.get("data") as Bitmap
+                val image = data!!.extras!!.get("data") as Bitmap
                 val userPicture = UserPictures(
                     0,
                     accountViewModel.id.value!!,
-                    Util.convertBitmapToByteArray(picture),
+                    Util.convertBitmapToByteArray(image),
                     lastKnownLocation!!.latitude,
                     lastKnownLocation!!.longitude,
                     Util.CurrentDateInString()
                 )
+                val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
                 viewLifecycleOwner.lifecycleScope.launch {
                     database.userPicturesDao().addPicture(userPicture)
+                    markers.updateMarkers()
+                    markers.initializeGalleryViewModel(requireActivity())
                 }
             } catch (e : Exception) {
                 Toast.makeText(requireContext(), e.message,
@@ -199,13 +212,6 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
             }
 
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        mMap?.let { map ->
-            outState.putParcelable(KEY_LOCATION, lastKnownLocation)
-        }
-        super.onSaveInstanceState(outState)
     }
 
     @SuppressLint("MissingPermission")
@@ -217,6 +223,18 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
             if (locationPermissionGranted) {
                 mMap?.isMyLocationEnabled = true
                 mMap?.uiSettings?.isMyLocationButtonEnabled = true
+                mMap?.uiSettings?.isMapToolbarEnabled = true
+                mMap?.uiSettings?.isRotateGesturesEnabled = true
+                mMap?.uiSettings?.isZoomControlsEnabled = true
+                mainViewModel.position.observe(viewLifecycleOwner) {
+                    if (it != null) {
+                        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            it,
+                            DEFAULT_ZOOM.toFloat()))
+                    } else {
+                        getDeviceLocation()
+                    }
+                }
             } else {
                 mMap?.isMyLocationEnabled = false
                 mMap?.uiSettings?.isMyLocationButtonEnabled = false
@@ -241,11 +259,9 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                     if (task.isSuccessful) {
                         // Set the map's camera position to the current location of the device.
                         lastKnownLocation = task.result
-                        if (lastKnownLocation != null) {
-                            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                LatLng(lastKnownLocation!!.latitude,
-                                    lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
-                        }
+                        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            LatLng(lastKnownLocation!!.latitude,
+                            lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.")
                         Log.e(TAG, "Exception: %s", task.exception)
@@ -270,6 +286,7 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 Manifest.permission.ACCESS_FINE_LOCATION)
             == PackageManager.PERMISSION_GRANTED) {
             locationPermissionGranted = true
+            updateLocationUI()
         } else {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
                 PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
@@ -287,11 +304,13 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 if (grantResults.isNotEmpty() &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true
+                    // Turn on the My Location layer and the related control on the map.
+                    updateLocationUI()
                 }
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
-        updateLocationUI()
+
     }
 
     companion object {
@@ -309,5 +328,6 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         private const val M_MAX_ENTRIES = 5
 
         private const val REQUEST_IMAGE_CAPTURE = 2
+        private const val TAB_INDEX = 0
     }
 }

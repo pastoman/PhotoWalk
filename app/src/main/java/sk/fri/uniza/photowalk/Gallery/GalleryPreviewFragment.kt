@@ -45,11 +45,11 @@ class GalleryPreviewFragment : Fragment(), GalleryRecyclerViewAdapter.OnPictureC
     private fun initializeRecyclerView() {
         viewLifecycleOwner.lifecycleScope.launch {
             val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
-            binding.galleryRecyclerView.adapter = GalleryRecyclerViewAdapter(
-                galleryViewModel.pictures,
-                this@GalleryPreviewFragment
-            )
-            binding.galleryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+//            binding.galleryRecyclerView.adapter = GalleryRecyclerViewAdapter(
+//                galleryViewModel.pictures,
+//                this@GalleryPreviewFragment
+//            )
+//            binding.galleryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
             galleryViewModel.pictures.observe(viewLifecycleOwner) {
                 binding.galleryRecyclerView.adapter = GalleryRecyclerViewAdapter(

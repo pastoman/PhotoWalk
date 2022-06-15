@@ -48,7 +48,10 @@ class LoginFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 if (checkAccount()) {
                     val intent = Intent(it.context, MainActivity::class.java)
-                    intent.putExtra("id", viewModel.id.value)
+                    val extras: Bundle = Bundle()
+                    extras.putInt("id", viewModel.id.value!!)
+                    extras.putParcelable("position", null)
+                    intent.putExtras(extras)
                     startActivity(intent)
                     requireActivity().finish()
                 }
@@ -61,7 +64,7 @@ class LoginFragment : Fragment() {
     }
 
 
-    suspend fun checkAccount() : Boolean {
+    private suspend fun checkAccount() : Boolean {
         val result = database.accountDao().getAccountId(binding.usernameLoginBox.text.toString(), binding.passwordLoginBox.text.toString())
         return if (result != null) {
             viewModel.setId(result.id)

@@ -1,12 +1,14 @@
 package sk.fri.uniza.photowalk.Friends
 
 import android.content.Intent
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -28,8 +30,12 @@ class FriendsRecyclerViewAdapter(private val friendsList: List<Friend>, private 
         holder.friendName.text = currentItem.name
         holder.placesButton.setOnClickListener {
             val intent = Intent(it.context, FriendProfileActivity::class.java)
-            intent.putExtra("id", currentItem.id)
+            val extras: Bundle = Bundle()
+            extras.putInt("id", currentItem.id)
+            extras.putInt("accountId", userId)
+            intent.putExtras(extras)
             startActivity(it.context, intent, null)
+            friendsListFragment.requireActivity().finish()
         }
         holder.removeFriendButton.setOnClickListener {
             it.findViewTreeLifecycleOwner()!!.lifecycleScope.launch {
