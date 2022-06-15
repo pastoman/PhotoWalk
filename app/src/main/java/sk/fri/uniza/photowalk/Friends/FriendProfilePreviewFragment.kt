@@ -46,12 +46,12 @@ class FriendProfilePreviewFragment : Fragment() {
             try {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
                 val result = database.userDataDao().getData(model.id.value!!)
-                val picture = Util.convertByteArrayToBitmap(result[0].picture!!)
+                val picture = Util.convertByteArrayToBitmap(result!!.picture!!)
                 binding.profilePicture.setImageBitmap(picture)
-                binding.profileNameValue.text = result[0].name
-                binding.profileSurnameValue.text = result[0].surname
-                binding.profileBirthdayValue.text = result[0].birthday
-                binding.profileCountryValue.text = result[0].country
+                binding.profileNameValue.text = result.name
+                binding.profileSurnameValue.text = result.surname
+                binding.profileBirthdayValue.text = result.birthday
+                binding.profileCountryValue.text = result.country
             } catch (e : Exception) {
                 Toast.makeText(requireContext(), e.message,
                     Toast.LENGTH_LONG).show()

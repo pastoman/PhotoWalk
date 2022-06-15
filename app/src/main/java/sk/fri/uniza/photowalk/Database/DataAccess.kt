@@ -26,7 +26,7 @@ interface AccountDao {
 interface UserDataDao {
 
     @Query("SELECT * FROM user_data WHERE id = :accountId")
-    suspend fun getData(accountId : Int) : List<UserData>
+    suspend fun getData(accountId : Int) : UserData?
 
     @Insert(onConflict = REPLACE)
     suspend fun addData(data : UserData)

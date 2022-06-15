@@ -57,7 +57,7 @@ class FriendGalleryFragment : Fragment() {
                             Util.convertByteArrayToBitmap(item.picture),
                             item.latitude,
                             item.longitude,
-                            Util.StringToDate(item.date)
+                            item.date
                         )
                     )
                 }

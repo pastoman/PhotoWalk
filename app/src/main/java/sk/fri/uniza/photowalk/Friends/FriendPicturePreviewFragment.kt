@@ -32,7 +32,7 @@ class FriendPicturePreviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
-        loadPicture()
+        loadData()
         binding.returnButton.setOnClickListener {
             it.findNavController().navigate(R.id.action_friendPicturePreviewFragment_to_friendGalleryPreviewFragment)
         }
@@ -51,7 +51,8 @@ class FriendPicturePreviewFragment : Fragment() {
         }
     }
 
-    private fun loadPicture() {
+    private fun loadData() {
         binding.pictureView.setImageBitmap(galleryViewModel.picture.value!!.picture)
+        binding.date.text = galleryViewModel.picture.value!!.date
     }
 }

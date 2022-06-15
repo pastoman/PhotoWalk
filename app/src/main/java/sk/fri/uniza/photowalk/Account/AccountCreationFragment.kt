@@ -29,7 +29,6 @@ import java.util.*
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-
 class AccountCreationFragment : Fragment() {
 
     private lateinit var binding: AccountCreationFragmentBinding
@@ -60,7 +59,7 @@ class AccountCreationFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
                 val picture = binding.profilePicture.drawable.toBitmap()
-                val byteArray: ByteArray = Util.convertBitmapToByteArray(picture)
+                val byteArray: ByteArray = Util.convertBitmapToByteArray(picture, 300)
                 database.userDataDao().addData(
                     UserData(
                         model.id.value!!,

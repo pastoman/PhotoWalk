@@ -35,10 +35,14 @@
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/maps_fragment.xml" value="0.5" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/picture_preview_fragment.xml" value="0.22" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/register_fragment.xml" value="0.22" />
-        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/spinner_item.xml" value="0.18385416666666668" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/spinner_item.xml" value="0.67" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/menu/current_place_menu.xml" value="0.33" />
       </map>
     </option>
+  </component>
+  <component name="JavadocGenerationManager">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/.." />
+    <option name="OPTION_SCOPE" value="public" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

@@ -1,5 +1,7 @@
 package sk.fri.uniza.photowalk.Account
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,4 +15,5 @@ class AccountViewModel : ViewModel() {
     fun setId(id : Int) {
         _id.value = id
     }
+
 }

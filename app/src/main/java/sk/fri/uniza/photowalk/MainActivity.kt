@@ -68,7 +68,7 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
                             Util.convertByteArrayToBitmap(item.picture),
                             item.latitude,
                             item.longitude,
-                            Util.StringToDate(item.date)
+                            item.date
                         )
                     )
                 }

@@ -2,9 +2,12 @@ package sk.fri.uniza.photowalk.Util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.widget.ArrayAdapter
+import sk.fri.uniza.photowalk.R
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.time.YearMonth
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -13,11 +16,11 @@ import kotlin.math.roundToInt
 
 class Util {
     companion object {
-        fun convertBitmapToByteArray(picture: Bitmap): ByteArray {
+        fun convertBitmapToByteArray(picture: Bitmap, maxResolution: Int): ByteArray {
             val stream = ByteArrayOutputStream()
             val ratio: Float = min(
-                1200.toFloat() / picture.width,
-                1200.toFloat() / picture.height
+                maxResolution.toFloat() / picture.width,
+                maxResolution.toFloat() / picture.height
             )
             val width =
                 (ratio * picture.width).roundToInt()

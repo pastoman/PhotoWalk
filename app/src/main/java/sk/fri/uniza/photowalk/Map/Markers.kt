@@ -21,6 +21,11 @@ import sk.fri.uniza.photowalk.Gallery.Picture
 import sk.fri.uniza.photowalk.Util.Util
 import java.util.concurrent.ConcurrentHashMap
 
+/**
+ * @property map
+ * @property accountId
+ * @property database
+ */
 class Markers(private val map: GoogleMap,
               private val accountId: Int,
               private val database: AppDatabase,
@@ -85,7 +90,7 @@ class Markers(private val map: GoogleMap,
                         Util.convertByteArrayToBitmap(item.picture),
                         item.latitude,
                         item.longitude,
-                        Util.StringToDate(item.date)
+                        item.date
                     )
                 )
             }

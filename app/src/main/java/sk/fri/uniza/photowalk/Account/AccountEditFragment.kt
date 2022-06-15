@@ -61,7 +61,7 @@ class AccountEditFragment : Fragment() {
             viewLifecycleOwner.lifecycleScope.launch {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
                 val picture = binding.profilePicture.drawable.toBitmap()
-                val byteArray: ByteArray = Util.convertBitmapToByteArray(picture)
+                val byteArray: ByteArray = Util.convertBitmapToByteArray(picture,1200)
                 database.userDataDao().addData(
                     UserData(
                         model.id.value!!,
@@ -85,11 +85,11 @@ class AccountEditFragment : Fragment() {
             try {
                 val model = ViewModelProvider(requireActivity()).get(AccountViewModel::class.java)
                 val result = database.userDataDao().getData(model.id.value!!)
-                val picture = Util.convertByteArrayToBitmap(result[0].picture!!)
+                val picture = Util.convertByteArrayToBitmap(result!!.picture!!)
                 binding.profilePicture.setImageBitmap(picture)
-                binding.profileNameEditText.setText(result[0].name)
-                binding.profileSurnameEditText.setText(result[0].surname)
-                val birthday = result[0].birthday
+                binding.profileNameEditText.setText(result.name)
+                binding.profileSurnameEditText.setText(result.surname)
+                val birthday = result.birthday
                 binding.day.setSelection(birthday!!.split(".").toTypedArray()[0].toInt()-1)
                 for (i in 0 until binding.month.count) {
                     if (binding.month.getItemAtPosition(i).toString() == birthday.split(".").toTypedArray()[1]) {
@@ -104,7 +104,7 @@ class AccountEditFragment : Fragment() {
                     binding.year.setSelection(newYear)
                 }
                 for (i in 0 until binding.country.count) {
-                    if (binding.country.getItemAtPosition(i).toString() == result[0].country) {
+                    if (binding.country.getItemAtPosition(i).toString() == result.country) {
                         binding.country.setSelection(i)
                         break
                     }

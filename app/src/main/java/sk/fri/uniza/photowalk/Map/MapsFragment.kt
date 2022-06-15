@@ -10,6 +10,7 @@ import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,7 @@ import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.switchMap
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
@@ -80,11 +82,14 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
             markers.initializeGalleryViewModel(requireActivity())
         }
         val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
-        galleryViewModel.pictures.observe(requireActivity()) {
+        galleryViewModel.pictures.observe(this) {
             lifecycleScope.launch {
                 markers.updateMarkers()
             }
         }
+
+
+
 
         timer.startTimer()
 //        if (lastKnownLocation != null) {
@@ -118,27 +123,26 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 Util.convertByteArrayToBitmap(result.picture),
                 result.latitude,
                 result.longitude,
-                Util.StringToDate(result.date)
+                result.date
             )
             if (result.id_account == accountViewModel.id.value!!) {
-                galleryViewModel.setPicture(picture)
-                galleryViewModel.setFromMap(true)
-                galleryViewModel.setEditable(true)
-                val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-                ft.replace(R.id.mainFragment, PicturePreviewFragment())
-                ft.addToBackStack(null)
-                ft.commit()
+                openPicturePreview(picture, true)
             } else {
-                galleryViewModel.setPicture(picture)
-                galleryViewModel.setFromMap(true)
-                galleryViewModel.setEditable(false)
-                val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-                ft.replace(R.id.mainFragment, PicturePreviewFragment())
-                ft.addToBackStack(null)
-                ft.commit()
+                openPicturePreview(picture, false)
             }
 
         }
+    }
+
+    private fun openPicturePreview(picture: Picture, editable: Boolean) {
+        val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
+        galleryViewModel.setPicture(picture)
+        galleryViewModel.setFromMap(true)
+        galleryViewModel.setEditable(editable)
+        val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        ft.replace(R.id.mainFragment, PicturePreviewFragment())
+        ft.addToBackStack(null)
+        ft.commit()
     }
 
     override fun onTimerFinish() {
@@ -159,7 +163,6 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
 
     override fun onDestroyView() {
         super.onDestroyView()
-        mainViewModel.setPosition(null)
         timer.stopTimer()
     }
 
@@ -195,12 +198,11 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 val userPicture = UserPictures(
                     0,
                     accountViewModel.id.value!!,
-                    Util.convertBitmapToByteArray(image),
+                    Util.convertBitmapToByteArray(image,1200),
                     lastKnownLocation!!.latitude,
                     lastKnownLocation!!.longitude,
                     Util.CurrentDateInString()
                 )
-                val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
                 viewLifecycleOwner.lifecycleScope.launch {
                     database.userPicturesDao().addPicture(userPicture)
                     markers.updateMarkers()
@@ -226,13 +228,20 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 mMap?.uiSettings?.isMapToolbarEnabled = true
                 mMap?.uiSettings?.isRotateGesturesEnabled = true
                 mMap?.uiSettings?.isZoomControlsEnabled = true
-                mainViewModel.position.observe(viewLifecycleOwner) {
+                if (mainViewModel.position.value != null) {
+                    mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                        mainViewModel.position.value!!,
+                        DEFAULT_ZOOM.toFloat()))
+                    mainViewModel.setPosition(null)
+                } else {
+                    getDeviceLocation()
+                }
+                mainViewModel.position.observe(this) {
                     if (it != null) {
                         mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
                             it,
                             DEFAULT_ZOOM.toFloat()))
-                    } else {
-                        getDeviceLocation()
+                        mainViewModel.setPosition(null)
                     }
                 }
             } else {
@@ -304,12 +313,14 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 if (grantResults.isNotEmpty() &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     locationPermissionGranted = true
-                    // Turn on the My Location layer and the related control on the map.
-                    updateLocationUI()
+
                 }
+                // Turn on the My Location layer and the related control on the map.
+                updateLocationUI()
             }
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
+
 
     }
 
@@ -317,15 +328,6 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         private val TAG = MapsFragment::class.java.simpleName
         private const val DEFAULT_ZOOM = 15
         private const val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1
-
-        // Keys for storing activity state.
-        // [START maps_current_place_state_keys]
-        private const val KEY_CAMERA_POSITION = "camera_position"
-        private const val KEY_LOCATION = "location"
-        // [END maps_current_place_state_keys]
-
-        // Used for selecting the current place.
-        private const val M_MAX_ENTRIES = 5
 
         private const val REQUEST_IMAGE_CAPTURE = 2
         private const val TAB_INDEX = 0
