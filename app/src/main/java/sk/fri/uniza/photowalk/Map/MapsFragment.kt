@@ -1,7 +1,6 @@
 package sk.fri.uniza.photowalk.Map
 
 import android.Manifest
-import android.R.attr
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -9,7 +8,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.location.Location
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -21,7 +19,9 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -29,7 +29,10 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
 import com.maps.route.extensions.drawRouteOnMap
@@ -40,13 +43,16 @@ import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.BuildConfig
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Database.UserPictures
+import sk.fri.uniza.photowalk.Gallery.GalleryViewModel
+import sk.fri.uniza.photowalk.Gallery.Picture
+import sk.fri.uniza.photowalk.Gallery.PicturePreviewFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.MapsFragmentBinding
-import java.lang.Exception
+import java.util.concurrent.ConcurrentHashMap
 
 
-class MapsFragment : Fragment() {
+class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
 
 
@@ -55,22 +61,20 @@ class MapsFragment : Fragment() {
     private lateinit var placesClient: PlacesClient
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var database: AppDatabase
+    private lateinit var accountViewModel: AccountViewModel
+    private val timer = Timer(this)
     private var mMap: GoogleMap? = null
     private val defaultLocation = LatLng(49.222229, 18.740134)
     private var locationPermissionGranted = false
-
+    private lateinit var markers: Markers
     private var lastKnownLocation: Location? = null
-    private var likelyPlaceNames: Array<String?> = arrayOfNulls(0)
-    private var likelyPlaceAddresses: Array<String?> = arrayOfNulls(0)
-    private var likelyPlaceAttributions: Array<List<*>?> = arrayOfNulls(0)
-    private var likelyPlaceLatLngs: Array<LatLng?> = arrayOfNulls(0)
 
-    private val callback = OnMapReadyCallback { googleMap ->
+    override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
+        googleMap.setOnInfoWindowClickListener(this)
 
         // Construct a PlacesClient
         getLocationPermission()
-
 
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI()
@@ -78,25 +82,59 @@ class MapsFragment : Fragment() {
         // Get the current location of the device and set the position of the map.
         getDeviceLocation()
 
+        markers = Markers(mMap!!, accountViewModel.id.value!!, database)
+        lifecycleScope.launch {
+            markers.placeMarkers()
+        }
+        timer.startTimer()
         if (lastKnownLocation != null) {
             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 LatLng(lastKnownLocation!!.latitude,
                     lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
-            val source = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude) //starting point (LatLng)
-            val destination = defaultLocation // ending point (LatLng)
+//            val source = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude) //starting point (LatLng)
+//            val destination = defaultLocation // ending point (LatLng)
 
-            mMap?.run {
-                moveCameraOnMap(latLng = source) // if you want to zoom the map to any point
-
-                //Called the drawRouteOnMap extension to draw the polyline/route on google maps
-                drawRouteOnMap(
-                    getString(R.string.maps_api_key), //your API key
-                    source = source, // Source from where you want to draw path
-                    destination = destination, // destination to where you want to draw path
-                    context = requireActivity().application //Activity context
-                )
-            }
+//            mMap?.run {
+//                moveCameraOnMap(latLng = source) // if you want to zoom the map to any point
+//
+//                //Called the drawRouteOnMap extension to draw the polyline/route on google maps
+//                drawRouteOnMap(
+//                    getString(R.string.maps_api_key), //your API key
+//                    source = source, // Source from where you want to draw path
+//                    destination = destination, // destination to where you want to draw path
+//                    context = requireActivity().application //Activity context
+//                )
+//            }
         }
+    }
+
+    override fun onInfoWindowClick(marker: Marker) {
+        val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
+        viewLifecycleOwner.lifecycleScope.launch {
+            val result = database.userPicturesDao().getPicture(marker.title!!.toInt())
+            val picture = Picture(
+                result.id_picture,
+                Util.convertByteArrayToBitmap(result.picture),
+                result.latitude,
+                result.longitude,
+                Util.StringToDate(result.date)
+            )
+            galleryViewModel.setPicture(picture)
+            galleryViewModel.setFromMap(true)
+            galleryViewModel.setEditable(true)
+            val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+            ft.replace(R.id.mainFragment, PicturePreviewFragment())
+            ft.addToBackStack(null)
+            ft.commit()
+        }
+    }
+
+    override fun onTimerFinish() {
+       viewLifecycleOwner.lifecycleScope.launch {
+
+           markers.updateMarkers()
+           timer.startTimer()
+       }
     }
 
     override fun onCreateView(
@@ -108,9 +146,15 @@ class MapsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        timer.stopTimer()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         database = AppDatabase.getDatabase(requireContext())
+        accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
         if (savedInstanceState != null) {
             lastKnownLocation = savedInstanceState.getParcelable(KEY_LOCATION)
         }
@@ -120,7 +164,7 @@ class MapsFragment : Fragment() {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireActivity().application)
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
+        mapFragment?.getMapAsync(this)
 
         binding.takePhoto.setOnClickListener {
 
@@ -137,11 +181,10 @@ class MapsFragment : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
             try {
-                val model = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
                 val picture = data!!.extras!!.get("data") as Bitmap
                 val userPicture = UserPictures(
                     0,
-                    model.id.value!!,
+                    accountViewModel.id.value!!,
                     Util.convertBitmapToByteArray(picture),
                     lastKnownLocation!!.latitude,
                     lastKnownLocation!!.longitude,
@@ -202,22 +245,6 @@ class MapsFragment : Fragment() {
                             mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                 LatLng(lastKnownLocation!!.latitude,
                                     lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
-
-                            val source = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude) //starting point (LatLng)
-                            val destination = LatLng(49.211311, 18.814463)// ending point (LatLng)
-
-                            mMap?.run {
-                                moveCameraOnMap(latLng = source) // if you want to zoom the map to any point
-
-                                //Called the drawRouteOnMap extension to draw the polyline/route on google maps
-                                drawRouteOnMap(
-                                    getString(R.string.maps_api_key), //your API key
-                                    source = source, // Source from where you want to draw path
-                                    destination = destination, // destination to where you want to draw path
-                                    context = requireActivity().application, //Activity context
-                                    travelMode = TravelMode.DRIVING
-                                )
-                            }
                         }
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.")

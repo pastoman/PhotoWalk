@@ -28,6 +28,7 @@ class GalleryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
+
         binding = DataBindingUtil.inflate(inflater, R.layout.gallery_fragment, container, false)
         return binding.root
     }
@@ -41,6 +42,8 @@ class GalleryFragment : Fragment() {
 
     private fun initializeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.setFromMap(false)
+            viewModel.setEditable(true)
             viewModel.clearPictures()
             val model = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
             val result = database.userPicturesDao().getAllPictures(model.id.value!!)

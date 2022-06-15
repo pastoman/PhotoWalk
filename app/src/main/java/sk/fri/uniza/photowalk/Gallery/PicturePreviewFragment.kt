@@ -4,11 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
@@ -37,16 +39,33 @@ class PicturePreviewFragment : Fragment() {
         database = AppDatabase.getDatabase(requireContext())
         loadPicture()
         binding.returnButton.setOnClickListener {
-            it.findNavController().navigate(R.id.action_picturePreviewFragment_to_galleryPreviewFragment)
+            if (galleryViewModel.fromMap.value!!) {
+                requireActivity().supportFragmentManager.popBackStack()
+            } else {
+                it.findNavController()
+                    .navigate(R.id.action_picturePreviewFragment_to_galleryPreviewFragment)
+            }
         }
 
-        binding.deleteImage.setOnClickListener {
-            viewLifecycleOwner.lifecycleScope.launch {
-                galleryViewModel.removePicture(galleryViewModel.picture.value!!)
-                database.userPicturesDao().deletePicture(galleryViewModel.picture.value!!.pictureId)
+        if (galleryViewModel.editable.value!!)
+        {
+            binding.deleteImage.setOnClickListener {
+                viewLifecycleOwner.lifecycleScope.launch {
+                    galleryViewModel.removePicture(galleryViewModel.picture.value!!)
+                    database.userPicturesDao().deletePicture(galleryViewModel.picture.value!!.pictureId)
+                }
+                if (galleryViewModel.fromMap.value!!) {
+                    requireActivity().supportFragmentManager.popBackStack()
+                } else {
+                    it.findNavController()
+                        .navigate(R.id.action_picturePreviewFragment_to_galleryPreviewFragment)
+                }
             }
-            it.findNavController().navigate(R.id.action_picturePreviewFragment_to_galleryPreviewFragment)
+        } else {
+            binding.deleteImage.isVisible = false
+            binding.showOnMap
         }
+
     }
 
     private fun loadPicture() {

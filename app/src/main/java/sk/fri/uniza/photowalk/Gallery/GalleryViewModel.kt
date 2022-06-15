@@ -16,7 +16,16 @@ class GalleryViewModel : ViewModel() {
     val picture : LiveData<Picture>
         get() = _picture
 
+    private var _editable = MutableLiveData<Boolean>()
+    val editable : LiveData<Boolean>
+        get() = _editable
+
+    private var _fromMap = MutableLiveData<Boolean>()
+    val fromMap : LiveData<Boolean>
+        get() = _fromMap
+
     init {
+        _editable.value = false
         _picturesLiveData.value = _pictures
     }
 
@@ -35,7 +44,15 @@ class GalleryViewModel : ViewModel() {
         _picturesLiveData.value = _pictures
     }
 
+    fun setEditable(editable: Boolean) {
+        _editable.value = editable
+    }
+
     fun setPicture(picture: Picture) {
         _picture.value = picture
+    }
+
+    fun setFromMap(fromMap: Boolean) {
+        _fromMap.value = fromMap
     }
 }

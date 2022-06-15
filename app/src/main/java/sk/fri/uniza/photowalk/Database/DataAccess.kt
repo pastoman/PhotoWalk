@@ -51,6 +51,8 @@ interface UserPicturesDao {
     @Query("SELECT * FROM user_pictures WHERE  id_account = :userId")
     suspend fun getAllPictures(userId: Int) : List<UserPictures>
 
+    @Query("SELECT * FROM user_pictures WHERE id_picture = :pictureId")
+    suspend fun getPicture(pictureId: Int) : UserPictures
     @Insert
     suspend fun addPicture(picture: UserPictures)
 

@@ -39,12 +39,6 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
 
     }
 
-    override fun onBackPressed() {
-        moveTaskToBack(true)
-        android.os.Process.killProcess(android.os.Process.myPid())
-        System.exit(0)
-    }
-
     override fun onTabSelected(tab: TabLayout.Tab?) {
         if (tab != null) {
             viewModel.setTabIndex(tab.position)
@@ -56,7 +50,6 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
             }
             val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
             ft.replace(R.id.mainFragment, fragment)
-            ft.addToBackStack(null)
             ft.commit()
         }
     }

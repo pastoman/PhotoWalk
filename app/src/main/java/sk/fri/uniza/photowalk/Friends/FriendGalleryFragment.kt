@@ -44,6 +44,8 @@ class FriendGalleryFragment : Fragment() {
 
     private fun initializeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.setFromMap(false)
+            viewModel.setEditable(false)
             viewModel.clearPictures()
             val model = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
             val result = database.userPicturesDao().getAllPictures(model.id.value!!)
