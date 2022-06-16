@@ -4,8 +4,26 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/account_creation_fragment.xml" value="0.222397476340694" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/account_edit_fragment.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/account_fragment.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/account_info_fragment.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/activity_friend_profile.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/activity_login.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/activity_main.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/fragment_gallery_preview.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/friend.xml" value="0.31040564373897706" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/friend_gallery_fragment.xml" value="0.16197916666666667" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/friend_gallery_preview_fragment.xml" value="0.16197916666666667" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/friend_picture_preview_fragment.xml" value="0.22" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/friend_profile_preview_fragment.xml" value="0.16197916666666667" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/friends_list_fragment.xml" value="0.16197916666666667" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/gallery_fragment.xml" value="0.16197916666666667" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/gallery_item.xml" value="0.16197916666666667" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/login_fragment.xml" value="0.25" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/maps_fragment.xml" value="0.16197916666666667" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/picture_preview_fragment.xml" value="0.25" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/register_fragment.xml" value="0.33" />
+        <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout-land/spinner_item.xml" value="0.16197916666666667" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/account_creation_fragment.xml" value="0.33" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/account_edit_fragment.xml" value="0.33" />
         <entry key="..\:/Sojaz/VAMZ/PhotoWalk/app/src/main/res/layout/account_fragment.xml" value="0.153125" />

@@ -42,7 +42,11 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout XML file and return a binding object instance
-        binding = DataBindingUtil.inflate(inflater, R.layout.login_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater,
+            R.layout.login_fragment,
+            container,
+            false
+        )
 
         return binding.root
     }

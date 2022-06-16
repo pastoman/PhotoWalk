@@ -30,7 +30,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 class Markers(private val map: GoogleMap,
               private val accountId: Int,
-              private val database: AppDatabase,
+              private val database: AppDatabase
               ) {
     private val markers = ConcurrentHashMap<Marker, String>()
 

@@ -50,7 +50,7 @@ class Timer(onFinishListener: OnFinishListener) {
      * interface, ktory sluzi ako listener na metodu onTimerFinish()
      *
      */
-    interface OnFinishListener{
+    interface OnFinishListener {
         fun onTimerFinish()
     }
 }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.core.content.ContextCompat.startActivity
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.findViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
@@ -24,7 +23,7 @@ import sk.fri.uniza.photowalk.R
  * @property friendsListFragment odkaz na fragment, v ktorom je recyclerView pouzivany
  */
 class FriendsRecyclerViewAdapter(
-    private val friendsList: List<Friend>,
+    private val friendsList: List<FriendData>,
     private val userId : Int,
     private val friendsListFragment: FriendsListFragment)
         : RecyclerView.Adapter<FriendsRecyclerViewAdapter.FriendsViewHolder>() {

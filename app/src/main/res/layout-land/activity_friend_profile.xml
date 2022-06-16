@@ -11,12 +11,12 @@
         android:id="@+id/constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".Friends.FriendProfileActivity">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="90dp"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,17 +26,7 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="@string/map" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:text="@string/gallery" />
-
-            <com.google.android.material.tabs.TabItem
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="@string/friends" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
@@ -46,8 +36,8 @@
         </com.google.android.material.tabs.TabLayout>
 
         <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/mainFragment"
-            android:name="sk.fri.uniza.photowalk.Map.MapsFragment"
+            android:id="@+id/mainFriendFragment"
+            android:name="sk.fri.uniza.photowalk.Friends.FriendGalleryFragment"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"

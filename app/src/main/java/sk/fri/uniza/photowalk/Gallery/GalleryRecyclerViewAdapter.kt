@@ -65,7 +65,10 @@ class GalleryRecyclerViewAdapter(private val pictures : LiveData<List<Picture>>,
      *
      * @param itemView pohlad daneho prvku
      */
-    class GalleryViewHolder(itemView: View, private val onPictureClickListener : OnPictureClickListener) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    class GalleryViewHolder(
+        itemView: View,
+        private val onPictureClickListener : OnPictureClickListener)
+            : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         val picture : ImageButton = itemView.findViewById(R.id.gallery_picture)
 
         init {

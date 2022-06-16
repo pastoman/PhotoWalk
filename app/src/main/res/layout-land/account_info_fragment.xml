@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/profilePicture"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+            android:scaleType="centerInside"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <ScrollView
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginBottom="32dp"
+            android:fillViewport="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/profilePicture">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:stretchColumns="0">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profileName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:ems="10"
+                        android:text="Name"
+                        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+                        app:layout_constraintStart_toStartOf="@+id/profilePicture"
+                        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profileNameValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:ems="10"
+                        android:paddingStart="30sp"
+                        android:text=""
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+                        app:layout_constraintStart_toStartOf="@+id/profilePicture"
+                        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profileSurname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:ems="10"
+                        android:text="Surname"
+                        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+                        app:layout_constraintStart_toStartOf="@+id/profilePicture"
+                        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="29dp">
+
+                    <TextView
+                        android:id="@+id/profileSurnameValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:ems="10"
+                        android:paddingStart="30sp"
+                        android:text=""
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+                        app:layout_constraintStart_toStartOf="@+id/profilePicture"
+                        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profileCountry"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="Country"
+                        app:layout_constraintBottom_toTopOf="@+id/day"
+                        app:layout_constraintStart_toStartOf="@+id/profileSurnameEditText"
+                        app:layout_constraintTop_toBottomOf="@+id/profileSurnameEditText"
+                        app:layout_constraintVertical_bias="0.076" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profileCountryValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:ems="10"
+                        android:paddingStart="30sp"
+                        android:text=""
+                        android:textStyle="bold"
+                        app:layout_constraintEnd_toEndOf="@+id/profilePicture"
+                        app:layout_constraintStart_toStartOf="@+id/profilePicture"
+                        app:layout_constraintTop_toBottomOf="@+id/profilePicture" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profileBirthday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
+                        android:text="Birthday"
+                        app:layout_constraintBottom_toTopOf="@+id/day"
+                        app:layout_constraintStart_toStartOf="@+id/profileCountry"
+                        app:layout_constraintTop_toBottomOf="@+id/profileCountry"
+                        app:layout_constraintVertical_bias="0.86" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/profileBirthdayValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:paddingStart="30sp"
+                        android:text=""
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/day"
+                        app:layout_constraintStart_toStartOf="@+id/profileCountry"
+                        app:layout_constraintTop_toBottomOf="@+id/profileCountry"
+                        app:layout_constraintVertical_bias="0.86" />
+                </TableRow>
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <Button
+                        android:id="@+id/edit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Edit" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <Button
+                        android:id="@+id/logout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Logout" />
+                </TableRow>
+            </TableLayout>
+        </ScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

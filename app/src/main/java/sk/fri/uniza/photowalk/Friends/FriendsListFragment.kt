@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
-import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.FriendsListFragmentBinding
 import java.lang.Exception
@@ -31,7 +29,7 @@ class FriendsListFragment : Fragment() {
     private lateinit var binding: FriendsListFragmentBinding
     private lateinit var database: AppDatabase
     private lateinit var viewModel: AccountViewModel
-    private val friends = mutableListOf<Friend>()
+    private val friends = mutableListOf<FriendData>()
 
     /**
      * sluzi na vytvorenie komponentov rozhrania pohladu
@@ -81,7 +79,7 @@ class FriendsListFragment : Fragment() {
                 val result = database.friendDao().getAllFriends(viewModel.id.value!!)
 
                 for (item in result) {
-                    friends.add(Friend(item.friendId, database.accountDao().findUsername(item.friendId)!!.username))
+                    friends.add(FriendData(item.friendId, database.accountDao().findUsername(item.friendId)!!.username))
                 }
                 binding.friendList.adapter = FriendsRecyclerViewAdapter(friends,
                     viewModel.id.value!!, this@FriendsListFragment)

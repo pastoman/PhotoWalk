@@ -2,8 +2,6 @@ package sk.fri.uniza.photowalk.Account
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -21,14 +19,10 @@ import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Database.UserData
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
-import sk.fri.uniza.photowalk.databinding.AccountCreationFragmentBinding
 import sk.fri.uniza.photowalk.databinding.AccountEditFragmentBinding
-import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.time.YearMonth
 import java.util.*
-import kotlin.math.min
-import kotlin.math.roundToInt
 
 /**
  * Fragment, ktory sluzi na upravu dodatocnych informacii pri prehliadani prihlaseneho uctu
@@ -66,7 +60,7 @@ class AccountEditFragment : Fragment() {
 
         database = AppDatabase.getDatabase(requireActivity().application)
         listCountries()
-        setDeaultDate()
+        setDefaultDate()
         loadInfo()
         binding.profilePicture.setOnClickListener {
             val intent = Intent(Intent.ACTION_PICK)
@@ -160,7 +154,7 @@ class AccountEditFragment : Fragment() {
 
     }
 
-    private fun setDeaultDate() {
+    private fun setDefaultDate() {
         val currYear = SimpleDateFormat("yyyy").format(Calendar.getInstance().time).toInt()
         val lastDay: Int = YearMonth.of(currYear, 1).lengthOfMonth()
         val days = mutableListOf<String>()

@@ -51,6 +51,7 @@ class Util {
          */
         @Suppress("DEPRECATION")
         fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
+            // zdroj: https://stackoverflow.com/questions/7620401/how-to-convert-image-file-data-in-a-byte-array-to-a-bitmap
             return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         }
 
@@ -60,6 +61,7 @@ class Util {
          * @return datum vo forme stringu
          */
         fun CurrentDateInString() : String {
+            // zdroj: https://www.codegrepper.com/code-examples/kotlin/get+formatted+current+date+and+time+kotlin
             val date = Calendar.getInstance().time
             return SimpleDateFormat("dd.MM.yyyy':' HH:mm:ss z").format(date)
         }

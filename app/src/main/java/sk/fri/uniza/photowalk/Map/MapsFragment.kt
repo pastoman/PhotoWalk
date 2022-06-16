@@ -49,7 +49,6 @@ import sk.fri.uniza.photowalk.databinding.MapsFragmentBinding
 class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
 
     private lateinit var binding: MapsFragmentBinding
-    private lateinit var placesClient: PlacesClient
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var database: AppDatabase
     private lateinit var accountViewModel: AccountViewModel
@@ -91,7 +90,6 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         mainViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
         mainViewModel.setTabIndex(TAB_INDEX)
         Places.initialize(requireContext(), BuildConfig.MAPS_API_KEY)
-        placesClient = Places.createClient(requireContext())
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -147,10 +145,9 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
     /**
      * metoda sa zavola po kliknuti na stitok znacky na mape
      *
-     * @param marker
+     * @param marker znacka na mape
      */
     override fun onInfoWindowClick(marker: Marker) {
-        val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
         viewLifecycleOwner.lifecycleScope.launch {
             val result = database.userPicturesDao().getPicture(marker.title!!.toInt())
             val picture = Picture(
@@ -306,9 +303,14 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                     if (task.isSuccessful) {
                         // Set the map's camera position to the current location of the device.
                         lastKnownLocation = task.result
-                        mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                            LatLng(lastKnownLocation!!.latitude,
-                            lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
+                        if (lastKnownLocation != null) {
+                            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                LatLng(lastKnownLocation!!.latitude,
+                                    lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
+                        } else {
+                            mMap?.moveCamera(CameraUpdateFactory
+                                .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
+                        }
                     } else {
                         Log.d(TAG, "Current location is null. Using defaults.")
                         Log.e(TAG, "Exception: %s", task.exception)
@@ -317,6 +319,9 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                         mMap?.uiSettings?.isMyLocationButtonEnabled = false
                     }
                 }
+            } else {
+                mMap?.moveCamera(CameraUpdateFactory
+                    .newLatLngZoom(defaultLocation, DEFAULT_ZOOM.toFloat()))
             }
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)

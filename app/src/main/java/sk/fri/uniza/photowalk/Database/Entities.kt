@@ -31,9 +31,11 @@ data class Account(
  * @property birthday datum narodenia
  * @property picture profilovy obrazok
  */
-@Entity(tableName = "user_data")
+@Entity(tableName = "user_data", foreignKeys = [ForeignKey(entity = Account::class,
+    parentColumns = ["id"],
+    childColumns = ["id"])])
 data class UserData(
-    @PrimaryKey val id : Int,
+    @PrimaryKey @ColumnInfo(name = "id") val id : Int,
     @ColumnInfo(name = "name") val name: String?,
     @ColumnInfo(name = "surname") val surname: String?,
     @ColumnInfo(name = "country") val country: String?,
@@ -47,7 +49,15 @@ data class UserData(
  * @property userId id pouzivatelskeho uctu
  * @property friendId id pouzivatelskeho uctu priatela
  */
-@Entity(tableName = "friend", primaryKeys = ["user_id", "friend_id"])
+@Entity(tableName = "friend", primaryKeys = ["user_id", "friend_id"],
+    foreignKeys = [
+        ForeignKey(entity = Account::class,
+            parentColumns = ["id"],
+            childColumns = ["user_id"]),
+        ForeignKey(entity = Account::class,
+            parentColumns = ["id"],
+            childColumns = ["friend_id"])
+    ])
 data class Friend(
     @ColumnInfo(name = "user_id") val userId: Int,
     @ColumnInfo(name = "friend_id") val friendId: Int
@@ -63,9 +73,13 @@ data class Friend(
  * @property longitude zemepisna dlzka
  * @property date datum odfotenia obrazku
  */
-@Entity(tableName = "user_pictures")
+@Entity(tableName = "user_pictures", foreignKeys = [
+    ForeignKey(entity = Account::class,
+        parentColumns = ["id"],
+        childColumns = ["id_picture"]
+    )])
 data class UserPictures(
-    @PrimaryKey(autoGenerate = true) val id_picture: Int,
+    @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id_picture") val id_picture: Int,
     @ColumnInfo(name = "id_account") val id_account: Int,
     @ColumnInfo(name = "picture", typeAffinity = ColumnInfo.BLOB) val picture: ByteArray,
     @ColumnInfo(name = "latitude") val latitude: Double,

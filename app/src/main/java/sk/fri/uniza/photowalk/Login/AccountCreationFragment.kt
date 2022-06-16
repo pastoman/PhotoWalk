@@ -106,12 +106,14 @@ class AccountCreationFragment : Fragment() {
     }
 
     private fun listCountries() {
+        // zdroj: https://stackoverflow.com/questions/9760341/retrieve-a-list-of-countries-from-the-android-os
         val isoCountryCodes = Locale.getISOCountries()
         val countries = mutableListOf<String>()
         for (countryCode in isoCountryCodes) {
             countries.add(Locale("", countryCode).displayCountry)
         }
         countries.sort()
+        // zdroj: https://stackoverflow.com/questions/62350236/how-to-use-an-arrayadapter-with-spinner-kotlin
         binding.country.adapter = ArrayAdapter(requireActivity().application,
             R.layout.spinner_item,
             countries)

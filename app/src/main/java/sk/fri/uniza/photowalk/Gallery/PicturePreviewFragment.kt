@@ -64,6 +64,11 @@ class PicturePreviewFragment : Fragment() {
 
     }
 
+    private fun loadData() {
+        binding.pictureView.setImageBitmap(galleryViewModel.picture.value!!.picture)
+        binding.date.text = galleryViewModel.picture.value!!.date
+    }
+
     private fun initializeShowOnMapListener() {
         binding.showOnMap.setOnClickListener {
             val mainViewModel =
@@ -83,11 +88,6 @@ class PicturePreviewFragment : Fragment() {
                 ft.commit()
             }
         }
-    }
-
-    private fun loadData() {
-        binding.pictureView.setImageBitmap(galleryViewModel.picture.value!!.picture)
-        binding.date.text = galleryViewModel.picture.value!!.date
     }
 
     private fun initializeReturnButtonListener() {
