@@ -76,7 +76,7 @@ data class Friend(
 @Entity(tableName = "user_pictures", foreignKeys = [
     ForeignKey(entity = Account::class,
         parentColumns = ["id"],
-        childColumns = ["id_picture"]
+        childColumns = ["id_account"]
     )])
 data class UserPictures(
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id_picture") val id_picture: Int,

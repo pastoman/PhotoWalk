@@ -189,18 +189,20 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
             try {
                 val image = data!!.extras!!.get("data") as Bitmap
-                val userPicture = UserPictures(
-                    0,
-                    accountViewModel.id.value!!,
-                    Util.convertBitmapToByteArray(image,1200),
-                    lastKnownLocation!!.latitude,
-                    lastKnownLocation!!.longitude,
-                    Util.CurrentDateInString()
-                )
-                viewLifecycleOwner.lifecycleScope.launch {
-                    database.userPicturesDao().addPicture(userPicture)
-                    markers.updateMarkers()
-                    markers.updateGalleryViewModel(requireActivity())
+                if (lastKnownLocation != null) {
+                    val userPicture = UserPictures(
+                        0,
+                        accountViewModel.id.value!!,
+                        Util.convertBitmapToByteArray(image,1200),
+                        lastKnownLocation!!.latitude,
+                        lastKnownLocation!!.longitude,
+                        Util.CurrentDateInString()
+                    )
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        database.userPicturesDao().addPicture(userPicture)
+                        markers.updateMarkers()
+                        markers.updateGalleryViewModel(requireActivity())
+                    }
                 }
             } catch (e : Exception) {
                 Toast.makeText(requireContext(), e.message,
