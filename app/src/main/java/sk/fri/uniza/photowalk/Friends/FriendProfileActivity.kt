@@ -1,18 +1,15 @@
 package sk.fri.uniza.photowalk.Friends
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.tabs.TabLayout
-import sk.fri.uniza.photowalk.Account.AccountFragment
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.MainActivity
-import sk.fri.uniza.photowalk.Map.MapsFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.ActivityFriendProfileBinding
 

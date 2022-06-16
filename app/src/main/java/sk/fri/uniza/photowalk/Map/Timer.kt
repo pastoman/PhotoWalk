@@ -1,7 +1,6 @@
 package sk.fri.uniza.photowalk.Map
 
 import android.os.CountDownTimer
-import java.util.Timer
 
 /**
  * Trieda, ktora predstavuje minutovy odpocet a sluzi na aktualizaciu mapy

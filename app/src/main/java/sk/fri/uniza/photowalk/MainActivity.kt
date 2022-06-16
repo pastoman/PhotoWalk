@@ -8,7 +8,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import kotlinx.coroutines.launch
@@ -18,7 +17,6 @@ import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Friends.FriendsListFragment
 import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
 import sk.fri.uniza.photowalk.Gallery.GalleryFragment
-import sk.fri.uniza.photowalk.Gallery.GalleryPreviewFragment
 import sk.fri.uniza.photowalk.Gallery.GalleryViewModel
 import sk.fri.uniza.photowalk.Gallery.Picture
 import sk.fri.uniza.photowalk.Map.MapsFragment
