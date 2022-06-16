@@ -2,14 +2,8 @@ package sk.fri.uniza.photowalk.Util
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.widget.ArrayAdapter
-import sk.fri.uniza.photowalk.R
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.YearMonth
-import java.time.ZoneId
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.min
 import kotlin.math.roundToInt

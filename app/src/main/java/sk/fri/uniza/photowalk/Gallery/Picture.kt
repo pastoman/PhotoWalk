@@ -1,7 +1,6 @@
 package sk.fri.uniza.photowalk.Gallery
 
 import android.graphics.Bitmap
-import java.util.*
 
 /**
  * datova trieda uchovava informacie o obrazku

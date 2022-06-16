@@ -1,14 +1,13 @@
 package sk.fri.uniza.photowalk.Account
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
-import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.AccountFragmentBinding
 

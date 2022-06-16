@@ -1,8 +1,6 @@
 package sk.fri.uniza.photowalk.Database
 
-import android.graphics.Bitmap
 import androidx.room.*
-import androidx.room.ForeignKey.CASCADE
 
 /**
  * Predstavuje entitu account vramci databazy AppDatabase

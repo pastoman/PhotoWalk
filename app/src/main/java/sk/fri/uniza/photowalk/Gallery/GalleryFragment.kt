@@ -1,20 +1,15 @@
 package sk.fri.uniza.photowalk.Gallery
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
-import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
 import sk.fri.uniza.photowalk.R
-import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.GalleryFragmentBinding
 
 /**

@@ -1,11 +1,11 @@
 package sk.fri.uniza.photowalk.Friends
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -16,7 +16,6 @@ import sk.fri.uniza.photowalk.Gallery.Picture
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.FriendGalleryFragmentBinding
-import sk.fri.uniza.photowalk.databinding.GalleryFragmentBinding
 
 /**
  * Fragment, ktory predstavuje NavHostFragment pre navigation_friend_gallery.xml
