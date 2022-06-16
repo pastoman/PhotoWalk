@@ -30,11 +30,22 @@ import java.util.*
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-
+/**
+ * Fragment, ktory sluzi na upravu dodatocnych informacii pri prehliadani prihlaseneho uctu
+ *
+ */
 class AccountEditFragment : Fragment() {
     private lateinit var binding: AccountEditFragmentBinding
     private lateinit var database: AppDatabase
 
+    /**
+     * sluzi na vytvorenie komponentov rozhrania pohladu
+     *
+     * @param inflater sluzi na vytvorenie pohladu z xml layout suboru
+     * @param container specialny pohlad, v ktorom je tento pohlad ulozeny
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     * @return pohlad, ktory je sucatou tohto fragmentu
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,6 +55,12 @@ class AccountEditFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * metoda sa vola hned po metode OnCreateView
+     *
+     * @param view pohlad vytvoreny metodou onCreateView
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -80,6 +97,20 @@ class AccountEditFragment : Fragment() {
 
     }
 
+    /**
+     * Vyhodnotenie vysledku systemovych poziadaviek a intentov
+     *
+     * @param requestCode specificky kod nasej poziadavky
+     * @param resultCode kod vysledku spracovania poziadavky
+     * @param data data, ktore vratila poziadavka
+     */
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == 100){
+            binding.profilePicture.setImageURI(data?.data)
+        }
+    }
+
     private fun loadInfo() {
         viewLifecycleOwner.lifecycleScope.launch  {
             try {
@@ -113,13 +144,6 @@ class AccountEditFragment : Fragment() {
                 Toast.makeText(requireContext(), e.message,
                     Toast.LENGTH_LONG).show()
             }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == 100){
-            binding.profilePicture.setImageURI(data?.data)
         }
     }
 

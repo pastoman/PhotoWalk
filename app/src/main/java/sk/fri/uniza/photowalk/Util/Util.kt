@@ -16,7 +16,15 @@ import kotlin.math.roundToInt
 
 class Util {
     companion object {
+        /**
+         * Medota prekonvertuje instanciu triedy Bitmap na pole bytov
+         *
+         * @param picture bitmapa, ktoru chceme prekonvertovat
+         * @param maxResolution maximalne rozlisenie obrazku
+         * @return pole bytov predstavujuce obrazok
+         */
         fun convertBitmapToByteArray(picture: Bitmap, maxResolution: Int): ByteArray {
+            // zdroj: https://stackoverflow.com/questions/8232608/fit-image-into-imageview-keep-aspect-ratio-and-then-resize-imageview-to-image-d
             val stream = ByteArrayOutputStream()
             val ratio: Float = min(
                 maxResolution.toFloat() / picture.width,
@@ -35,21 +43,22 @@ class Util {
             return stream.toByteArray()
         }
 
+        /**
+         * Medota prekonvertuje pole bytov na instanciu triedy Bitmap
+         *
+         * @param byteArray pole bytov predstavujuce obrazok
+         * @return instancia treidy Bitmap
+         */
         @Suppress("DEPRECATION")
         fun convertByteArrayToBitmap(byteArray: ByteArray): Bitmap {
             return BitmapFactory.decodeByteArray(byteArray, 0, byteArray.size)
         }
 
-        fun StringToDate(string: String) : Date {
-            val formatter = SimpleDateFormat("dd.MM.yyyy':' HH:mm:ss z")
-            val text = "2022-01-06"
-            return formatter.parse(string)
-        }
-
-        fun DateToString(date: Date) : String {
-            return SimpleDateFormat("dd.MM.yyyy':' HH:mm:ss z").format(Date())
-        }
-
+        /**
+         * metoda vrati momentalny cas a datum vo forme stringu
+         *
+         * @return datum vo forme stringu
+         */
         fun CurrentDateInString() : String {
             val date = Calendar.getInstance().time
             return SimpleDateFormat("dd.MM.yyyy':' HH:mm:ss z").format(date)

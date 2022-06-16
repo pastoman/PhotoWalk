@@ -10,7 +10,6 @@ import android.graphics.Bitmap
 import android.location.Location
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,38 +21,32 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewTreeLifecycleOwner
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.switchMap
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.*
 import com.google.android.gms.maps.model.*
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.net.PlacesClient
-import com.maps.route.extensions.drawRouteOnMap
-import com.maps.route.extensions.moveCameraOnMap
-import com.maps.route.model.TravelMode
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.BuildConfig
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.Database.UserPictures
 import sk.fri.uniza.photowalk.Friends.MainActivityViewModel
-import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.Gallery.GalleryViewModel
 import sk.fri.uniza.photowalk.Gallery.Picture
 import sk.fri.uniza.photowalk.Gallery.PicturePreviewFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.MapsFragmentBinding
-import java.util.concurrent.ConcurrentHashMap
 
-
+/**
+ * fragment predstavuje nahlad na mapy od googlu, na ktorej je zobrazena lokacia pouzivatela a
+ * jeho fotky a aj fotky jeho priatelov
+ *
+ */
 class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, GoogleMap.OnInfoWindowClickListener {
-
-
-
 
     private lateinit var binding: MapsFragmentBinding
     private lateinit var placesClient: PlacesClient
@@ -68,6 +61,67 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
     private lateinit var markers: Markers
     private var lastKnownLocation: Location? = null
 
+    /**
+     * sluzi na vytvorenie komponentov rozhrania pohladu
+     *
+     * @param inflater sluzi na vytvorenie pohladu z xml layout suboru
+     * @param container specialny pohlad, v ktorom je tento pohlad ulozeny
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     * @return pohlad, ktory je sucatou tohto fragmentu
+     */
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        binding = DataBindingUtil.inflate(inflater, R.layout.maps_fragment, container, false)
+
+        return binding.root
+    }
+
+    /**
+     * metoda sa vola hned po metode OnCreateView
+     *
+     * @param view pohlad vytvoreny metodou onCreateView
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        database = AppDatabase.getDatabase(requireContext())
+        accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
+        mainViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
+        mainViewModel.setTabIndex(TAB_INDEX)
+        Places.initialize(requireContext(), BuildConfig.MAPS_API_KEY)
+        placesClient = Places.createClient(requireContext())
+
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+        binding.takePhoto.setOnClickListener {
+
+            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            try {
+                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
+            } catch (e: ActivityNotFoundException) {
+                // display error state to the user
+            }
+        }
+    }
+
+    /**
+     * metoda, ktora sa zavola pri zniceni pohladu, zastavuje casovac aktualizacie mapy
+     *
+     */
+    override fun onDestroyView() {
+        super.onDestroyView()
+        timer.stopTimer()
+    }
+
+    /**
+     * funkcia sa zavola, ked su mapy od google pripravene
+     *
+     * @param googleMap google mapy
+     */
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         googleMap.setOnInfoWindowClickListener(this)
@@ -79,7 +133,7 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
 
         markers = Markers(mMap!!, accountViewModel.id.value!!, database)
         viewLifecycleOwner.lifecycleScope.launch {
-            markers.initializeGalleryViewModel(requireActivity())
+            markers.updateGalleryViewModel(requireActivity())
         }
         val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
         galleryViewModel.pictures.observe(this) {
@@ -87,33 +141,14 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 markers.updateMarkers()
             }
         }
-
-
-
-
         timer.startTimer()
-//        if (lastKnownLocation != null) {
-//            mMap?.moveCamera(CameraUpdateFactory.newLatLngZoom(
-//                LatLng(lastKnownLocation!!.latitude,
-//                    lastKnownLocation!!.longitude), DEFAULT_ZOOM.toFloat()))
-//            val source = LatLng(lastKnownLocation!!.latitude, lastKnownLocation!!.longitude) //starting point (LatLng)
-//            val destination = defaultLocation // ending point (LatLng)
-
-//            mMap?.run {
-//                moveCameraOnMap(latLng = source) // if you want to zoom the map to any point
-//
-//                //Called the drawRouteOnMap extension to draw the polyline/route on google maps
-//                drawRouteOnMap(
-//                    getString(R.string.maps_api_key), //your API key
-//                    source = source, // Source from where you want to draw path
-//                    destination = destination, // destination to where you want to draw path
-//                    context = requireActivity().application //Activity context
-//                )
-//            }
-        //}
-
     }
 
+    /**
+     * metoda sa zavola po kliknuti na stitok znacky na mape
+     *
+     * @param marker
+     */
     override fun onInfoWindowClick(marker: Marker) {
         val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
         viewLifecycleOwner.lifecycleScope.launch {
@@ -134,62 +169,24 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         }
     }
 
-    private fun openPicturePreview(picture: Picture, editable: Boolean) {
-        val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
-        galleryViewModel.setPicture(picture)
-        galleryViewModel.setFromMap(true)
-        galleryViewModel.setEditable(editable)
-        val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
-        ft.replace(R.id.mainFragment, PicturePreviewFragment())
-        ft.addToBackStack(null)
-        ft.commit()
-    }
-
+    /**
+     * zavola sa, ked vyprsi casovac a sluzi na aktualizaciu znaciek na mape a resetovanie casovaca
+     *
+     */
     override fun onTimerFinish() {
-       viewLifecycleOwner.lifecycleScope.launch {
-           markers.updateMarkers()
-           timer.startTimer()
-       }
-    }
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.maps_fragment, container, false)
-
-        return binding.root
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        timer.stopTimer()
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        database = AppDatabase.getDatabase(requireContext())
-        accountViewModel = ViewModelProvider(requireActivity())[AccountViewModel::class.java]
-        mainViewModel = ViewModelProvider(requireActivity())[MainActivityViewModel::class.java]
-        mainViewModel.setTabIndex(TAB_INDEX)
-        Places.initialize(requireContext(), BuildConfig.MAPS_API_KEY)
-        placesClient = Places.createClient(requireContext())
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this)
-        binding.takePhoto.setOnClickListener {
-
-            val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            try {
-                startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-            } catch (e: ActivityNotFoundException) {
-             // display error state to the user
-            }
+        viewLifecycleOwner.lifecycleScope.launch {
+            markers.updateMarkers()
+            timer.startTimer()
         }
     }
 
+    /**
+     * Vyhodnotenie vysledku systemovych poziadaviek a intentov
+     *
+     * @param requestCode specificky kod nasej poziadavky
+     * @param resultCode kod vysledku spracovania poziadavky
+     * @param data data, ktore vratila poziadavka
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
@@ -206,7 +203,7 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
                 viewLifecycleOwner.lifecycleScope.launch {
                     database.userPicturesDao().addPicture(userPicture)
                     markers.updateMarkers()
-                    markers.initializeGalleryViewModel(requireActivity())
+                    markers.updateGalleryViewModel(requireActivity())
                 }
             } catch (e : Exception) {
                 Toast.makeText(requireContext(), e.message,
@@ -214,6 +211,46 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
             }
 
         }
+    }
+
+    /**
+     * Vyhodnotenie vysledku ziadosti o ziskanie opravnenia aplikacie
+     *
+     * @param requestCode specificky kod nasej poziadavky
+     * @param permissions popisy opravneni
+     * @param grantResults vysledok poziadavky o ziskanie opravnenia
+     */
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>,
+                                            grantResults: IntArray) {
+        locationPermissionGranted = false
+        when (requestCode) {
+            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    locationPermissionGranted = true
+
+                }
+                // Turn on the My Location layer and the related control on the map.
+                updateLocationUI()
+            }
+            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        }
+
+
+    }
+
+    private fun openPicturePreview(picture: Picture, editable: Boolean) {
+        val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
+        galleryViewModel.setPicture(picture)
+        galleryViewModel.setFromMap(true)
+        galleryViewModel.setEditable(editable)
+        val ft: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction()
+        ft.replace(R.id.mainFragment, PicturePreviewFragment())
+        ft.addToBackStack(null)
+        ft.commit()
     }
 
     @SuppressLint("MissingPermission")
@@ -258,6 +295,7 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
     @SuppressLint("MissingPermission")
     private fun getDeviceLocation() {
         /*
+         * zdroj: https://developers.google.com/maps/documentation/android-sdk/current-place-tutorial
          * Get the best and most recent location of the device, which may be null in rare
          * cases when a location is not available.
          */
@@ -287,6 +325,7 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
 
     private fun getLocationPermission() {
         /*
+         * zdroj: https://developers.google.com/maps/documentation/android-sdk/location
          * Request location permission, so that we can get the location of the
          * device. The result of the permission request is handled by a callback,
          * onRequestPermissionsResult.
@@ -302,27 +341,6 @@ class MapsFragment : Fragment(), Timer.OnFinishListener, OnMapReadyCallback, Goo
         }
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
-        locationPermissionGranted = false
-        when (requestCode) {
-            PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION -> {
-
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.isNotEmpty() &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    locationPermissionGranted = true
-
-                }
-                // Turn on the My Location layer and the related control on the map.
-                updateLocationUI()
-            }
-            else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        }
-
-
-    }
 
     companion object {
         private val TAG = MapsFragment::class.java.simpleName

@@ -20,12 +20,23 @@ import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.AccountInfoFragmentBinding
 
-
+/**
+ * Fragment zobrazi dodatocne informacie o ucte, ktore vsak nie su dostupne k editacii
+ *
+ */
 class AccountInfoFragment : Fragment() {
 
     lateinit var binding: AccountInfoFragmentBinding
     lateinit var database: AppDatabase
 
+    /**
+     * sluzi na vytvorenie komponentov rozhrania pohladu
+     *
+     * @param inflater sluzi na vytvorenie pohladu z xml layout suboru
+     * @param container specialny pohlad, v ktorom je tento pohlad ulozeny
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     * @return pohlad, ktory je sucatou tohto fragmentu
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -38,6 +49,12 @@ class AccountInfoFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * metoda sa vola hned po metode OnCreateView
+     *
+     * @param view pohlad vytvoreny metodou onCreateView
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         loadInfo()

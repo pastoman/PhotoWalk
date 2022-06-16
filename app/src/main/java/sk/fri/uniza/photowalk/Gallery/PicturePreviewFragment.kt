@@ -19,21 +19,40 @@ import sk.fri.uniza.photowalk.Map.MapsFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.PicturePreviewFragmentBinding
 
+/**
+ * Fragment predstavuje nahlad obrazku s moznostou zobrazenia obrazku na mape a s datumom odfotenia
+ *
+ */
 class PicturePreviewFragment : Fragment() {
     private lateinit var binding: PicturePreviewFragmentBinding
     private lateinit var database: AppDatabase
     private lateinit var galleryViewModel: GalleryViewModel
 
+    /**
+     * sluzi na vytvorenie komponentov rozhrania pohladu
+     *
+     * @param inflater sluzi na vytvorenie pohladu z xml layout suboru
+     * @param container specialny pohlad, v ktorom je tento pohlad ulozeny
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     * @return pohlad, ktory je sucatou tohto fragmentu
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        binding = DataBindingUtil.inflate(inflater, R.layout.picture_preview_fragment, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.picture_preview_fragment,
+            container, false)
 
         return binding.root
     }
 
+    /**
+     * metoda sa vola hned po metode OnCreateView
+     *
+     * @param view pohlad vytvoreny metodou onCreateView
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]

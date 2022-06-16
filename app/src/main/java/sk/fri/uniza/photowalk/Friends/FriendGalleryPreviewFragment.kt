@@ -17,12 +17,23 @@ import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.FragmentGalleryPreviewBinding
 import sk.fri.uniza.photowalk.databinding.FriendGalleryPreviewFragmentBinding
 
-
+/**
+ * fragment, ktory predstavuje zobrazenie obrazkov v recyclerView
+ *
+ */
 class FriendGalleryPreviewFragment : Fragment(), GalleryRecyclerViewAdapter.OnPictureClickListener {
 
     private lateinit var binding: FriendGalleryPreviewFragmentBinding
     private lateinit var database: AppDatabase
 
+    /**
+     * sluzi na vytvorenie komponentov rozhrania pohladu
+     *
+     * @param inflater sluzi na vytvorenie pohladu z xml layout suboru
+     * @param container specialny pohlad, v ktorom je tento pohlad ulozeny
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     * @return pohlad, ktory je sucatou tohto fragmentu
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -31,6 +42,12 @@ class FriendGalleryPreviewFragment : Fragment(), GalleryRecyclerViewAdapter.OnPi
         return binding.root
     }
 
+    /**
+     * metoda sa vola hned po metode OnCreateView
+     *
+     * @param view pohlad vytvoreny metodou onCreateView
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         database = AppDatabase.getDatabase(requireContext())
@@ -39,6 +56,12 @@ class FriendGalleryPreviewFragment : Fragment(), GalleryRecyclerViewAdapter.OnPi
 
     }
 
+    /**
+     * metoda sa zavola pri kliknuti na obrazok a zabezpeci zobrazenie daneho obrazku na novom
+     * fragmente
+     *
+     * @param position pozicia obrazku v recycler view
+     */
     override fun onPictureClick(position: Int) {
         val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
         galleryViewModel.setPicture(galleryViewModel.pictures.value!![position])
@@ -48,12 +71,6 @@ class FriendGalleryPreviewFragment : Fragment(), GalleryRecyclerViewAdapter.OnPi
     private fun initializeRecyclerView() {
         viewLifecycleOwner.lifecycleScope.launch {
             val galleryViewModel = ViewModelProvider(requireActivity())[GalleryViewModel::class.java]
-            binding.galleryRecyclerView.adapter = GalleryRecyclerViewAdapter(
-                galleryViewModel.pictures,
-                this@FriendGalleryPreviewFragment
-            )
-            binding.galleryRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-
             galleryViewModel.pictures.observe(viewLifecycleOwner) {
                 binding.galleryRecyclerView.adapter = GalleryRecyclerViewAdapter(
                     galleryViewModel.pictures,

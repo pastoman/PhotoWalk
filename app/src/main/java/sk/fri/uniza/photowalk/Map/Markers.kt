@@ -22,9 +22,11 @@ import sk.fri.uniza.photowalk.Util.Util
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * @property map
- * @property accountId
- * @property database
+ * trieda, ktora ma na starost manipulaciu so znackami na mape
+ *
+ * @property map instancia google map
+ * @property accountId id uctu
+ * @property database aplikacna databaza
  */
 class Markers(private val map: GoogleMap,
               private val accountId: Int,
@@ -33,9 +35,42 @@ class Markers(private val map: GoogleMap,
     private val markers = ConcurrentHashMap<Marker, String>()
 
 
+    /**
+     * aktualizacia znaciek na mape
+     *
+     */
     suspend fun updateMarkers() {
         removeMarkers()
         placeMarkers()
+    }
+
+    /**
+     * aktualizuje viewModel typu GalleryViewModel tak, ze ho premaze a
+     * do neho  prida vsetky obrazky z databazy
+     *
+     * @param activity aktivita, ktora je momentalne aktivna
+     */
+    suspend fun updateGalleryViewModel(activity: FragmentActivity) {
+        val viewModel = ViewModelProvider(activity)[GalleryViewModel::class.java]
+        val database = AppDatabase.getDatabase(activity)
+        viewModel.setFromMap(false)
+        viewModel.setEditable(true)
+        viewModel.clearPictures()
+        val model = ViewModelProvider(activity)[AccountViewModel::class.java]
+        val result = database.userPicturesDao().getAllPictures(model.id.value!!)
+        if (result.isNotEmpty()) {
+            for (item in result) {
+                viewModel.addPicture(
+                    Picture(
+                        item.id_picture,
+                        Util.convertByteArrayToBitmap(item.picture),
+                        item.latitude,
+                        item.longitude,
+                        item.date
+                    )
+                )
+            }
+        }
     }
 
     private suspend fun placeMarkers() {
@@ -74,27 +109,5 @@ class Markers(private val map: GoogleMap,
         map.clear()
     }
 
-    suspend fun initializeGalleryViewModel(activity: FragmentActivity) {
-        val viewModel = ViewModelProvider(activity)[GalleryViewModel::class.java]
-        val database = AppDatabase.getDatabase(activity)
-        viewModel.setFromMap(false)
-        viewModel.setEditable(true)
-        viewModel.clearPictures()
-        val model = ViewModelProvider(activity)[AccountViewModel::class.java]
-        val result = database.userPicturesDao().getAllPictures(model.id.value!!)
-        if (result.isNotEmpty()) {
-            for (item in result) {
-                viewModel.addPicture(
-                    Picture(
-                        item.id_picture,
-                        Util.convertByteArrayToBitmap(item.picture),
-                        item.latitude,
-                        item.longitude,
-                        item.date
-                    )
-                )
-            }
-        }
 
-    }
 }

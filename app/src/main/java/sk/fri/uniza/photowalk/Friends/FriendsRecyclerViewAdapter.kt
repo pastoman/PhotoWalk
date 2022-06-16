@@ -16,14 +16,38 @@ import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Database.AppDatabase
 import sk.fri.uniza.photowalk.R
 
-class FriendsRecyclerViewAdapter(private val friendsList: List<Friend>, private val userId : Int, private val friendsListFragment: FriendsListFragment) : RecyclerView.Adapter<FriendsRecyclerViewAdapter.FriendsViewHolder>() {
+/**
+ * adapter pre recyclerView, ktory urcuje, ako manipulovat s jednotlivymi polozkami
+ *
+ * @property friendsList zoznam priatelov, ktorych chceme pridat do recyclerView
+ * @property userId id priatela
+ * @property friendsListFragment odkaz na fragment, v ktorom je recyclerView pouzivany
+ */
+class FriendsRecyclerViewAdapter(
+    private val friendsList: List<Friend>,
+    private val userId : Int,
+    private val friendsListFragment: FriendsListFragment)
+        : RecyclerView.Adapter<FriendsRecyclerViewAdapter.FriendsViewHolder>() {
 
+    /**
+     * metoda zabezpecuje vytvorenie holdera typu FriendsViewHolder
+     *
+     * @param parent kontext otca
+     * @param viewType typ pohladu
+     * @return holder typu FriendsViewHolder
+     */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FriendsViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.friend,
             parent, false)
         return FriendsViewHolder(itemView)
     }
 
+    /**
+     * sluzi na inicializaciu prvkov holdera z atributu friendsList
+     *
+     * @param holder holder typu FriendsViewHolder
+     * @param position index prvku holdera
+     */
     override fun onBindViewHolder(holder: FriendsViewHolder, position: Int) {
         val currentItem = friendsList[position]
 
@@ -47,10 +71,23 @@ class FriendsRecyclerViewAdapter(private val friendsList: List<Friend>, private 
         }
     }
 
+    /**
+     * vrati pocet prvkov v holderi
+     *
+     * @return pocet prvkov v holderi
+     */
     override fun getItemCount(): Int {
         return friendsList.size
     }
 
+    /**
+     * Holder pre recyclerView, ktory obsahuje prvky layoutu friend.xml
+     *
+     * @constructor
+     * inicializuje vsetky atributy
+     *
+     * @param itemView pohlad daneho prvku
+     */
     class FriendsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             val friendName : TextView = itemView.findViewById(R.id.friendName)
             val placesButton : ImageButton = itemView.findViewById(R.id.placesButton)

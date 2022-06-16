@@ -9,6 +9,14 @@ plugins {
 
 }
 
+dokkaHtml.configure {
+    dokkaSourceSets {
+        named("main") {
+            noAndroidSdkLink.set(false)
+        }
+    }
+}
+
 dokkaHtml {
     dokkaSourceSets {
         named("main") {
