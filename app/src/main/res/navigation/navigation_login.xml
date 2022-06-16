@@ -33,7 +33,7 @@
     </fragment>
     <fragment
         android:id="@+id/accountCreationFragment"
-        android:name="sk.fri.uniza.photowalk.Account.AccountCreationFragment"
+        android:name="sk.fri.uniza.photowalk.Login.AccountCreationFragment"
         android:label="AccountCreationFragment"
         tools:layout="@layout/account_creation_fragment">
         <action

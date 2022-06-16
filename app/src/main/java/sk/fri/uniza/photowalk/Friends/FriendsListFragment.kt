@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -17,17 +16,29 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.launch
 import sk.fri.uniza.photowalk.Account.AccountViewModel
 import sk.fri.uniza.photowalk.Database.AppDatabase
-import sk.fri.uniza.photowalk.Gallery.GalleryFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.FriendsListFragmentBinding
 import java.lang.Exception
 
+/**
+ * Fragment vyuziva recyclerView na zobrazenie zoznamu priatelov a taktiez umoznuje pridavat
+ * priatelov na zaklade nazvu ich uctu
+ *
+ */
 class FriendsListFragment : Fragment() {
     private lateinit var binding: FriendsListFragmentBinding
     private lateinit var database: AppDatabase
     private lateinit var viewModel: AccountViewModel
-    private val friends = mutableListOf<Friend>()
+    private val friends = mutableListOf<FriendData>()
 
+    /**
+     * sluzi na vytvorenie komponentov rozhrania pohladu
+     *
+     * @param inflater sluzi na vytvorenie pohladu z xml layout suboru
+     * @param container specialny pohlad, v ktorom je tento pohlad ulozeny
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     * @return pohlad, ktory je sucatou tohto fragmentu
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -44,6 +55,12 @@ class FriendsListFragment : Fragment() {
         return binding.root
     }
 
+    /**
+     * metoda sa vola hned po metode OnCreateView
+     *
+     * @param view pohlad vytvoreny metodou onCreateView
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,6 +68,10 @@ class FriendsListFragment : Fragment() {
 
     }
 
+    /**
+     * Nacita priatelov do recycler view z databazy
+     *
+     */
     fun loadFriends() {
         viewLifecycleOwner.lifecycleScope.launch {
             try {
@@ -58,7 +79,7 @@ class FriendsListFragment : Fragment() {
                 val result = database.friendDao().getAllFriends(viewModel.id.value!!)
 
                 for (item in result) {
-                    friends.add(Friend(item.friendId, database.accountDao().findUsername(item.friendId)!!.username))
+                    friends.add(FriendData(item.friendId, database.accountDao().findUsername(item.friendId)!!.username))
                 }
                 binding.friendList.adapter = FriendsRecyclerViewAdapter(friends,
                     viewModel.id.value!!, this@FriendsListFragment)
@@ -72,7 +93,8 @@ class FriendsListFragment : Fragment() {
         }
     }
 
-    private fun showFriendDialog(){
+    private fun showFriendDialog() {
+        // zdroj: https://handyopinion.com/show-alert-dialog-with-an-input-field-edittext-in-android-kotlin/
         val builder: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(requireContext())
         builder.setTitle("Title")
 

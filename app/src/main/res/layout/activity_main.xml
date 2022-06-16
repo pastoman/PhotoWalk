@@ -26,23 +26,22 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:icon="@android:drawable/ic_dialog_map"
-                android:text="Map" />
+                android:text="@string/map" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Gallery" />
+                android:text="@string/gallery" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Friends" />
+                android:text="@string/friends" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Account" />
+                android:text="@string/account" />
 
         </com.google.android.material.tabs.TabLayout>
 

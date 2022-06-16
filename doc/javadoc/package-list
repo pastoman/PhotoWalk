@@ -1,0 +1,23 @@
+$dokka.format:javadoc-v1
+$dokka.linkExtension:html
+$dokka.location:sk.fri.uniza.photowalk.Account/AccountFragment.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Account/AccountFragment.Companion.html
+$dokka.location:sk.fri.uniza.photowalk.Database/AppDatabase.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Database/AppDatabase.Companion.html
+$dokka.location:sk.fri.uniza.photowalk.Friends/FriendGalleryFragment.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Friends/FriendGalleryFragment.Companion.html
+$dokka.location:sk.fri.uniza.photowalk.Friends/FriendProfilePreviewFragment.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Friends/FriendProfilePreviewFragment.Companion.html
+$dokka.location:sk.fri.uniza.photowalk.Friends/FriendsListFragment.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Friends/FriendsListFragment.Companion.html
+$dokka.location:sk.fri.uniza.photowalk.Friends/FriendsRecyclerViewAdapter.FriendsViewHolder///PointingToDeclaration/sk/fri/uniza/photowalk/Friends/FriendsRecyclerViewAdapter.FriendsViewHolder.html
+$dokka.location:sk.fri.uniza.photowalk.Gallery/GalleryFragment.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Gallery/GalleryFragment.Companion.html
+$dokka.location:sk.fri.uniza.photowalk.Gallery/GalleryRecyclerViewAdapter.GalleryViewHolder///PointingToDeclaration/sk/fri/uniza/photowalk/Gallery/GalleryRecyclerViewAdapter.GalleryViewHolder.html
+$dokka.location:sk.fri.uniza.photowalk.Gallery/GalleryRecyclerViewAdapter.OnPictureClickListener///PointingToDeclaration/sk/fri/uniza/photowalk/Gallery/GalleryRecyclerViewAdapter.OnPictureClickListener.html
+$dokka.location:sk.fri.uniza.photowalk.Map/MapsFragment.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Map/MapsFragment.Companion.html
+$dokka.location:sk.fri.uniza.photowalk.Map/Timer.OnFinishListener///PointingToDeclaration/sk/fri/uniza/photowalk/Map/Timer.OnFinishListener.html
+$dokka.location:sk.fri.uniza.photowalk.Util/Util.Companion///PointingToDeclaration/sk/fri/uniza/photowalk/Util/Util.Companion.html
+sk.fri.uniza.photowalk
+sk.fri.uniza.photowalk.Account
+sk.fri.uniza.photowalk.Database
+sk.fri.uniza.photowalk.Friends
+sk.fri.uniza.photowalk.Gallery
+sk.fri.uniza.photowalk.Login
+sk.fri.uniza.photowalk.Map
+sk.fri.uniza.photowalk.Util
+

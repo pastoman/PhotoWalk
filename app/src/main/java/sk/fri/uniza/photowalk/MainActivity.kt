@@ -25,11 +25,21 @@ import sk.fri.uniza.photowalk.Map.MapsFragment
 import sk.fri.uniza.photowalk.Util.Util
 import sk.fri.uniza.photowalk.databinding.ActivityMainBinding
 
-
+/**
+ * Hlavna aktivita, ktora sa spusta po prihlaseni sa do uctu, umoznuje navigaciu cez zalozky
+ * a zobrazuje fragmenty
+ *
+ */
 class MainActivity : AppCompatActivity(), OnTabSelectedListener {
     private lateinit var binding : ActivityMainBinding
     private val viewModel: MainActivityViewModel by viewModels()
 
+    /**
+     * metoda sa zavola pri vytvoreni aktivity, sluzi na inicializaciu tried potrebnych na
+     * fungovanie aktivity
+     *
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,6 +61,42 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
 
     }
 
+    /**
+     * metoda tabLayout, ktora sa zavola pri zakliknuti zalozky
+     *
+     * @param tab zalozka, ktora bola nakliknuta
+     */
+    override fun onTabSelected(tab: TabLayout.Tab?) {
+        if (tab != null) {
+            viewModel.setTabIndex(tab.position)
+            val fragment : Fragment = when (tab.position) {
+                0 -> MapsFragment()
+                1 -> GalleryFragment()
+                2 -> FriendsListFragment()
+                else -> AccountFragment()
+            }
+            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+            ft.replace(R.id.mainFragment, fragment)
+            ft.commit()
+        }
+    }
+
+    /**
+     * metoda sa vola pri zruseni vyberu zalozky
+     *
+     * @param tab zalozka
+     */
+    override fun onTabUnselected(tab: TabLayout.Tab?) {
+    }
+
+    /**
+     * metoda sa vola pri opatovnom kliknuti na zalozku
+     *
+     * @param tab zalozka
+     */
+    override fun onTabReselected(tab: TabLayout.Tab?) {
+    }
+
     private fun initializeGalleryViewModel() {
         lifecycleScope.launch {
             val viewModel = ViewModelProvider(this@MainActivity)[GalleryViewModel::class.java]
@@ -68,32 +114,11 @@ class MainActivity : AppCompatActivity(), OnTabSelectedListener {
                             Util.convertByteArrayToBitmap(item.picture),
                             item.latitude,
                             item.longitude,
-                            Util.StringToDate(item.date)
+                            item.date
                         )
                     )
                 }
             }
         }
-    }
-
-    override fun onTabSelected(tab: TabLayout.Tab?) {
-        if (tab != null) {
-            viewModel.setTabIndex(tab.position)
-            val fragment : Fragment = when (tab.position) {
-                0 -> MapsFragment()
-                1 -> GalleryFragment()
-                2 -> FriendsListFragment()
-                else -> AccountFragment()
-            }
-            val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
-            ft.replace(R.id.mainFragment, fragment)
-            ft.commit()
-        }
-    }
-
-    override fun onTabUnselected(tab: TabLayout.Tab?) {
-    }
-
-    override fun onTabReselected(tab: TabLayout.Tab?) {
     }
 }

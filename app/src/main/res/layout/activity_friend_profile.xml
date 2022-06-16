@@ -26,12 +26,12 @@
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Gallery" />
+                android:text="@string/gallery" />
 
             <com.google.android.material.tabs.TabItem
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="Account" />
+                android:text="@string/account" />
 
         </com.google.android.material.tabs.TabLayout>
 

@@ -7,17 +7,23 @@ import androidx.databinding.DataBindingUtil
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.ActivityLoginBinding
 
-
+/**
+ * Aktivita sluzi na prihlasovanie a registrovanie pouzivatelov
+ *
+ */
 class LoginActivity : AppCompatActivity() {
-    private lateinit var constraintLayout: ConstraintLayout
+    private lateinit var binding : ActivityLoginBinding
 
+    /**
+     * metoda sa zavola pri vytvoreni aktivity, sluzi na inicializaciu tried potrebnych na
+     * fungovanie aktivity
+     *
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityLoginBinding>(this,
-            R.layout.activity_login
-        )
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
         supportActionBar?.hide()
-        constraintLayout = binding.constraintLayout
 
     }
 

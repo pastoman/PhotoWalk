@@ -16,10 +16,20 @@ import sk.fri.uniza.photowalk.Map.MapsFragment
 import sk.fri.uniza.photowalk.R
 import sk.fri.uniza.photowalk.databinding.ActivityFriendProfileBinding
 
+/**
+ * Hlavna aktivita, ktora sa spusta pri prehliadani uctu priatela
+ *
+ */
 class FriendProfileActivity : AppCompatActivity(), TabLayout.OnTabSelectedListener {
     private lateinit var binding : ActivityFriendProfileBinding
     private lateinit var viewModel: AccountViewModel
 
+    /**
+     * metoda sa zavola pri vytvoreni aktivity, sluzi na inicializaciu tried potrebnych na
+     * fungovanie aktivity
+     *
+     * @param savedInstanceState ulozeny predchadzajuci stav pri behu aplikacie
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,9 +50,15 @@ class FriendProfileActivity : AppCompatActivity(), TabLayout.OnTabSelectedListen
 
     }
 
+    /**
+     * metoda sa zavola pri stlaceni tlacidla spat a sluzi na ukoncenie tejto aktivity a navratu
+     * do hlavnej aktivity uctu
+     *
+     */
     override fun onBackPressed() {
         val mainViewModel = ViewModelProvider(this)[FriendProfileActivityViewModel::class.java]
         val intent = Intent(application, MainActivity::class.java)
+        // zdroj: https://stackoverflow.com/questions/6767596/how-to-pass-intent-extras
         val extras = Bundle()
         extras.putInt("id", mainViewModel.mainAccountId.value!!)
         extras.putParcelable("position", null)
@@ -51,6 +67,11 @@ class FriendProfileActivity : AppCompatActivity(), TabLayout.OnTabSelectedListen
         finish()
     }
 
+    /**
+     * metoda tabLayout, ktora sa zavola pri zakliknuti zalozky
+     *
+     * @param tab zalozka, ktora bola nakliknuta
+     */
     override fun onTabSelected(tab: TabLayout.Tab?) {
         if (tab != null) {
             val fragment : Fragment = when (tab.position) {
@@ -64,9 +85,19 @@ class FriendProfileActivity : AppCompatActivity(), TabLayout.OnTabSelectedListen
         }
     }
 
+    /**
+     * metoda sa vola pri zruseni vyberu zalozky
+     *
+     * @param tab zalozka
+     */
     override fun onTabUnselected(tab: TabLayout.Tab?) {
     }
 
+    /**
+     * metoda sa vola pri opatovnom kliknuti na zalozku
+     *
+     * @param tab zalozka
+     */
     override fun onTabReselected(tab: TabLayout.Tab?) {
     }
 }

@@ -5,6 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.maps.model.LatLng
 
+/**
+ * viewModel viazany na zivotny cyklus celej aktivity a uchovava informaciu o pozicii obrazku a o
+ * indexe aktualnej zalozky
+ *
+ */
 class MainActivityViewModel : ViewModel() {
 
     private var _position = MutableLiveData<LatLng?>()
